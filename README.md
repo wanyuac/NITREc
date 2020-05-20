@@ -39,5 +39,9 @@ Two examples of legit sequence headers:
 ```fasta
 >ribE ribE|NZ_HG941718.1|+|463949..464419|EC958_RS02180|WP_001021161.1|6,7-dimethyl-8-ribityllumazine synthase
 
->>ribE ribE|IN01#13|+|54543..55013|NA|6,7-dimethyl-8-ribityllumazine synthase
+>ribE ribE|IN01#13|+|54543..55013|NA|6,7-dimethyl-8-ribityllumazine synthase
 ```
+
+
+
+The design of sequence headers aims to be compatible to the [ResFinder](https://cge.cbs.dtu.dk/services/ResFinder/) database and keep database curation simple. Although I am familiar with the [SRST2-compatible format](https://github.com/katholt/srst2), my experience of creating its [ARGannot_r2.fasta](https://github.com/katholt/srst2/blob/master/data/ARGannot_r2.fasta) database suggests that this stringent format requires much effort for expanding the database.
