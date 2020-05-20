@@ -29,7 +29,7 @@ Notes about these fields:
 - Genome name: the isolate or strain name retrieved from an NCBI nucleotide record.
 - NCBI nucleotide accession or contig name: a contig name is used when the allele sequence is not stored in the NCBI nucleotide database.
 - Strand: '+' stands for the forward strand of the NCBI record accessed through the nucleotide accession or of a source contig, and '-' stands for the reverse complementary strand of the same record or contig.
-- Coordinates: start and end positions of the allele in the forward strand, recorded in the same format as that in a GenBank file. For example, `608139..608792`.
+- Coordinates: start and end positions of the allele in the forward strand, recorded in the same order as that in a GenBank file, and are separated by a dash. For example, `608139-608792`.
 - Product name: usually it is the name of the product protein.
 - Additional information, such as mutation information, can be appended to the sequence description using a semicolon as a separator.
 - 'NA' is a space holder for empty fields. For example, it is used when the protein accession number or locus tag has not been assigned.
@@ -39,9 +39,9 @@ Notes about these fields:
 Two examples of legit sequence headers:
 
 ```fasta
->ribE ribE|EC958|NZ_HG941718.1|+|463949..464419|EC958_RS02180|WP_001021161.1|6,7-dimethyl-8-ribityllumazine synthase
+>ribE ribE|EC958|NZ_HG941718.1|+|463949-464419|EC958_RS02180|WP_001021161.1|6,7-dimethyl-8-ribityllumazine synthase
 
->ribE ribE|IN01|13|+|54543..55013|NA|6,7-dimethyl-8-ribityllumazine synthase
+>ribE ribE|IN01|13|+|54543-55013|NA|6,7-dimethyl-8-ribityllumazine synthase
 ```
 
 
