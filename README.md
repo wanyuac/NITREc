@@ -1,8 +1,12 @@
-# A Nucleotide database of Chromosomal Mutations Related to Nitrofurantoin Resistance in _Escherichia coli_
+# A Database of Chromosomal Genetic Alterations Related to Nitrofurantoin Resistance in _Escherichia coli_
 
 _Yu Wan_
 
-Creation: 20 May 2020; latest update: 20 May 2020.
+Creation: 20 May 2020; latest update: 10 June 2020.
+
+<br/>
+
+This database consists of nucleotide and amino acid sequences of chromosomal genes involving in nitrofurantoin resistance in *E. coli*.
 
 
 
@@ -37,16 +41,16 @@ Notes about these fields:
 
 
 
-Two examples of legit sequence headers:
+Two examples of legit headers of nucleotide and protein sequences:
 
 ```fasta
 >ribE ribE|EC958|NZ_HG941718.1|+|463949-464419|+|EC958_RS02180|WP_001021161.1|6,7-dimethyl-8-ribityllumazine synthase
 
->ribE ribE|IN01|13|+|54543-55013|+|NA|6,7-dimethyl-8-ribityllumazine synthase
+>RibE ribE|IN01|13|+|54543-55013|+|NA|6,7-dimethyl-8-ribityllumazine synthase
 
 >nfsA nfsA|ATCC25922|NZ_CP009072.1|-|4377122-4377844|+|DR76_RS21800|WP_000189167.1|Nitroreductase NfsA
 
->nfsA nfsA|IN07|7|-|141755-142477|-|NA|NA|Nitroreductase NfsA
+>NfsA nfsA|IN07|7|-|141755-142477|-|NA|NA|Nitroreductase NfsA
 ```
 
 
@@ -57,9 +61,7 @@ The design of sequence headers aims to be compatible to the [ResFinder](https://
 
 ## 2. Filename convention
 
-The name of every FASTA file (`.fna`) of this database consists of two fields: gene or cluster name, and an indicator for wildtype ('wt') or variant ('var') alleles. Double underscores separate these two fields. For example, `nfsA__var.fna` stores variant alleles of the gene _nfsA_ in nitrofurantoin resistant _E. coli_ (NITREc).
-
-
+The name of every FASTA file (`.fna` for nucleotide sequences and `.faa` for protein sequences) of this database consists of two fields: gene or cluster name, and an indicator for nitrofurantoin susceptible ('S') or resistant ('R') alleles. Double underscores separate these two fields. For example, `nfsA__R.fna` stores alleles of the gene _nfsA_ in nitrofurantoin resistant _E. coli_ (NITREc).
 
 Gene or cluster names are kept in sequence headers for convenience of concatenating sequence files for some software or analyses, despite presence of these names in the names of FASTA files.
 
