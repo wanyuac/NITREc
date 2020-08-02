@@ -17,7 +17,7 @@ Usage:
 
 Copyright (C) 2020 Yu Wan <wanyuac@126.com>
 Licensed under the GNU General Public Licence version 3 (GPLv3) <https://www.gnu.org/licenses/>.
-Publication: 27 July 2020; last modification: 1 August 2020
+Publication: 27 July 2020; last modification: 2 August 2020
 """
 
 import sys
@@ -34,6 +34,7 @@ def parse_arguments():
     parser.add_argument("-o1", type = str, required = True, help = "Output FASTA file of sequences whose IDs comprise the ID list.")
     parser.add_argument("-o2", type = str, required = False, default = None, help = "Output FASTA file of sequences whose IDs are not on the ID list. (Optional)")
     parser.add_argument("-d", action = "store_true", help = "Use sequence description rather than ID for separation")
+    parser.add_argument("-r", action = "store_true", help = "Remove sequence ID from sequence description: useful for CD-HIT and is disabled when -d is used")
 
     return parser.parse_args()
 
@@ -46,20 +47,31 @@ def main():
     if args.o2 != None:
         out_2 = open(args.o2, "w")
         for seq in SeqIO.parse(args.i, "fasta"):  # read the input FASTA file from stdin
-            item = seq.description if args.d else seq.id
-            if item in items_inc:
-                print(">" + seq.description, file = out_1)
-                print(seq.seq, file = out_1)
+            if args.d:
+                item = seq.description
+                if args.r:
+                    seq.description = seq.description[len(seq.id) + 1 : ]
             else:
-                print(">" + seq.description, file = out_2)
-                print(seq.seq, file = out_2)
+                item = seq.id
+            
+            # Assign the current sequence
+            if item in items_inc:
+                write_seq(seq.seq, seq.description, out_1)
+            else:
+                write_seq(seq.seq, seq.description, out_2)
         out_2.close()
     else:
         for seq in SeqIO.parse(args.i, "fasta"):
-            item = seq.description if args.d else seq.id
+            if args.d:
+                item = seq.description
+                if args.r:
+                    seq.description = seq.description[len(seq.id) + 1 : ]
+            else:
+                item = seq.id
+            
+            # Determine whether the current sequence should be written into the output file
             if item in items_inc:
-                print(">" + seq.description, file = out_1)
-                print(seq.seq, file = out_1)
+                write_seq(seq.seq, seq.description, out_1)
     out_1.close()
 
     return
@@ -71,6 +83,13 @@ def read_inc_list(list_file):
         ids = f.read().splitlines()
 
     return ids
+
+
+def write_seq(seq, descr, fasta_handle):
+    print(">" + descr, file = fasta_handle)
+    print(seq, file = fasta_handle)
+
+    return
 
 
 if __name__ == "__main__":
