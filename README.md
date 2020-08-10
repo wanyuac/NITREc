@@ -66,3 +66,8 @@ The name of every FASTA file (`.fna` for nucleotide sequences and `.faa` for pro
 
 Gene or cluster names are kept in sequence headers for convenience of concatenating sequence files for some software or analyses, despite presence of these names in the names of FASTA files.
 
+
+
+## 3. Content of nucleotide and protein sequences
+
+For each gene in this database, some nucleotide sequences (in subdirectory `nucl`) do not have their corresponding protein sequences (matched by sequence descriptions) in subdirectory `prot`, and vice versa, because of synonymous mutations and sometimes literature does not report nucleotide sequences that encode protein mutants. Nonetheless, the protein database (`prot`) is often adequate for functional prediction of proteins.
