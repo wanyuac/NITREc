@@ -1,0 +1,60 @@
+#!/bin/bash
+#PBS -lselect=1:ncpus=1:mem=2gb
+#PBS -lwalltime=24:00:00
+#PBS -N megaBLAST
+#PBS -j oe
+#
+# Job parameter: c, path to a configuration file
+# Example command: pbs -v c="screenGenes.config" screenGenes.pbs
+#
+# Copyright (C) 2020 Yu Wan <wanyuac@126.com>
+# Licensed under the GNU General Public Licence version 3 (GPLv3) <https://www.gnu.org/licenses/>.
+# Creation: 28 August 2020; the latest modification: 28 August 2020
+
+##### Jump to the current working directory to enable use of relative paths (for example, to access the configuration file)
+# The job will be run under the directory where it is submitted.
+cd $PBS_O_WORKDIR
+
+##### Execute the configuration file to read parameters, which are set before submitting this job #####
+# This block also loads prerequsite modules when they are specified in the configuration file.
+if [ -z "$c" ]  # Argument c can be a path relative to the current working directory
+then
+    echo 'Exit, as the mandatory configuration file is not provided.'
+    exit 0
+elif [ -f "$c" ]
+then
+    echo "Reading configurations from file ${c}."
+    source $c  # Read user's configurations
+else
+    echo "Cannot find the configuration file ${c}."
+    exit 0
+fi
+
+##### Load environmental modules #####
+# Code in this block is platform-specific. Please modify the code for your system.
+if [ ! -z "$MODULE" ] && [ ! -z "${CONDA_ENV}" ]
+then
+    echo Activate conda environment $CONDA_ENV through module $MODULE
+    module load $MODULE
+    if [ $CONDA_ACTIVATE_METHOD = 'source' ]
+    then
+        source activate $CONDA_ENV  # Customisation: some systems use this command to activate an environment
+    else
+        conda activate $CONDA_ENV
+    fi
+fi
+
+##### Create the directory of BLAST databases
+if [ ! -d $DB_DIR ]
+then
+    mkdir $DB_DIR
+fi
+
+##### Screen genes in assemblies
+OUTFMT='6 qseqid sseqid slen pident qcovhsp length mismatch gapopen qstart qend sstart send sstrand evalue bitscore sseq'  # Fields in output TSV files
+
+while IFS=$'\n' read g
+do
+    makeblastdb -in ${SUBJECT_DIR}/${g}.${SUBJECT_SUFFIX} -dbtype nucl -out $g
+    blastn -query $QUERIES -db $g -out ${g}__megaBLAST.tsv -task $TASK -evalue $MAX_EVALUE -perc_identity $MIN_IDENTITY -max_target_seqs $MAX_TARGET_SEQS -outfmt $OUTFMT
+done < $GENOMES
