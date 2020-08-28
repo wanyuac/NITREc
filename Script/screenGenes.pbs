@@ -51,10 +51,20 @@ then
 fi
 
 ##### Screen genes in assemblies
-OUTFMT='6 qseqid sseqid slen pident qcovhsp length mismatch gapopen qstart qend sstart send sstrand evalue bitscore sseq'  # Fields in output TSV files
+# Print arguments
+echo 'Arguments'
+echo "  Subject genomes: ${GENOMES}"
+echo "  Queries: ${QUERIES}"
+echo "  BLAST task: ${TASK}"
+echo "  Minimum nucleotide identity: ${MIN_IDENTITY}"
+echo "  Maximum number of hits per query sequence: ${MAX_TARGET_SEQS}"
+echo "  Maximum e-value: ${MAX_EVALUE}"
 
 while IFS=$'\n' read g
 do
-    makeblastdb -in ${SUBJECT_DIR}/${g}.${SUBJECT_SUFFIX} -dbtype nucl -out $g
-    blastn -query $QUERIES -db $g -out ${g}__megaBLAST.tsv -task $TASK -evalue $MAX_EVALUE -perc_identity $MIN_IDENTITY -max_target_seqs $MAX_TARGET_SEQS -outfmt $OUTFMT
+    if [ ! -f ${DB_DIR}/${g}.nsq ]
+    then
+        makeblastdb -in ${SUBJECT_DIR}/${g}.${SUBJECT_SUFFIX} -out ${DB_DIR}/$g -dbtype nucl
+    fi
+    blastn -query $QUERIES -db ${DB_DIR}/$g -out ${g}__megaBLAST.tsv -task $TASK -evalue $MAX_EVALUE -perc_identity $MIN_IDENTITY -max_target_seqs $MAX_TARGET_SEQS -outfmt '6 qseqid sseqid slen pident qcovhsp length mismatch gapopen qstart qend sstart send sstrand evalue bitscore sseq'
 done < $GENOMES
