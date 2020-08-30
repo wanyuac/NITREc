@@ -6,8 +6,5 @@ _1 August 2020_
 
 
 
-Reference nucleotide and their translated protein sequences are offered here. Specifically, reference sequences are organised in two subdirectories as follows:
-
-- `nucl`: nucleotide sequences
-- `prot`: protein sequences
+Reference nucleotide (\*.fna files) and their translated protein (\*.faa files) sequences of genes _nfsA_, _nfsB_, and _ribE_ are offered here. Insertion sequences (ISs) interrupting _nfsA_ or _nfsB_ are provided subdirectory `IS`.
 
