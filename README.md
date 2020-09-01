@@ -2,7 +2,7 @@
 
 _Yu Wan_
 
-Creation: 20 May 2020; latest update: 10 August 2020.
+Creation: 20 May 2020; latest update: 1 Sep 2020.
 
 <br/>
 
@@ -12,11 +12,13 @@ This database consists of nucleotide and amino acid sequences of chromosomal gen
 
 ## 1. Format of sequence headers
 
-The header of every sequence in the NITREcMut database is comprised of two standard domains, namely, sequence ID and sequence annotation (Both domains constitute a sequence description), that are accessible through an object of BioPython's `SeqRecord` class:
+NITREcMut database uses what we call ISPA (**I**D, **s**ource, **p**roduct, and **a**dditional note) format. Specifically, the header of every sequence in the NITREcMut database is comprised of two standard domains, namely, sequence ID and sequence annotation (Both domains constitute a sequence description), that are accessible through an object of BioPython's `SeqRecord` class:
 
 ```fasta
 >{Sequence ID} {Sequence annotation}
 ```
+
+
 
 Specifically, we use the sequence ID for the allele name, while the domain of sequence annotation consists of bar-delimited fields describing gene or cluster names, sequence source, product, etc., as shown below:
 
@@ -57,6 +59,53 @@ Two examples of legit headers of nucleotide and protein sequences:
 
 
 The design of sequence headers aims to be compatible to the [ResFinder](https://cge.cbs.dtu.dk/services/ResFinder/) database and keep database curation simple. Although I am familiar with the [SRST2-compatible format](https://github.com/katholt/srst2), my experience of creating its [ARGannot_r2.fasta](https://github.com/katholt/srst2/blob/master/data/ARGannot_r2.fasta) database suggests that this stringent format requires much effort for expanding the database.
+
+
+
+### A note on performing sequence clustering for confirmation of database non-redundancy
+
+Sometimes users may want to run `cd-hit-est` or `cd-hit` on their curated gene databases to check for non-redundancy. It is easier to inspect clusters if sequence IDs are isolate names rather than allele names (which maybe the same in each multi-FASTA file). Assuming sequence headers follow the ISPA format, then users can perform the following two steps to reformat sequence headers.
+
+Suppose the database to be clustered is comprised of three sequences:
+
+```fasta
+>nfsA nfsA|UMN026|NC_011751.1|1074103-1074825|+|ECUMN_RS06175|WP_000189140.1|Nitroreductase NfsA
+ATGACGCCAACCATTGAACTTATTTGTGGCCATCGCTCCATTCGCCATTTCACTGATGAACCCATTTCCG...
+
+>nfsA nfsA|BR02|NZ_CP035320.1|1056121-1056843|+|EK474_RS05475|WP_000189159.1|Nitroreductase NfsA
+ATGACGCCAACCATTGAACTTATTTGTGGCCATCGCTCCATTCGCCATTTCACTGATGAACCCATTTCCG...
+
+>nfsA nfsA|ATCC25922|NZ_CP009072.1|4377122-4377844|-|DR76_RS21800|WP_000189167.1|Nitroreductase NfsA
+ATGACGCCAACCATTGAACTTATTTGTGGCCATCGCTCCATTCGCCATTTCACTGATGAACCCATTTCCG...
+```
+
+- Step 1: Substitute "nfsA nfsA|" (for the corresponding protein database, use "NfsA nfsA|") with empty characters "" in a text editor using function "Find and Replace". The outcome will be:
+
+```fasta
+>UMN026|NC_011751.1|1074103-1074825|+|ECUMN_RS06175|WP_000189140.1|Nitroreductase NfsA
+ATGACGCCAACCATTGAACTTATTTGTGGCCATCGCTCCATTCGCCATTTCACTGATGAACCCATTTCCG...
+
+>BR02|NZ_CP035320.1|1056121-1056843|+|EK474_RS05475|WP_000189159.1|Nitroreductase NfsA
+ATGACGCCAACCATTGAACTTATTTGTGGCCATCGCTCCATTCGCCATTTCACTGATGAACCCATTTCCG...
+
+>ATCC25922|NZ_CP009072.1|4377122-4377844|-|DR76_RS21800|WP_000189167.1|Nitroreductase NfsA
+ATGACGCCAACCATTGAACTTATTTGTGGCCATCGCTCCATTCGCCATTTCACTGATGAACCCATTTCCG...
+```
+
+- Step 2: Substitute "|" with white spaces " " in the same way as step 1, generating a FASTA file as follows:
+
+```fasta
+>UMN026 NC_011751.1 1074103-1074825 + ECUMN_RS06175 WP_000189140.1 Nitroreductase NfsA
+ATGACGCCAACCATTGAACTTATTTGTGGCCATCGCTCCATTCGCCATTTCACTGATGAACCCATTTCCG...
+
+>BR02 NZ_CP035320.1 1056121-1056843 + EK474_RS05475 WP_000189159.1 Nitroreductase NfsA
+ATGACGCCAACCATTGAACTTATTTGTGGCCATCGCTCCATTCGCCATTTCACTGATGAACCCATTTCCG...
+
+>ATCC25922 NZ_CP009072.1 4377122-4377844 - DR76_RS21800 WP_000189167.1 Nitroreductase NfsA
+ATGACGCCAACCATTGAACTTATTTGTGGCCATCGCTCCATTCGCCATTTCACTGATGAACCCATTTCCG...
+```
+
+Since `cd-hit-est` and `cd-hit` read sequence headers till the first space, only isolate names will appear in the cluster file, thus solving the problem of sequence clustering.
 
 
 
