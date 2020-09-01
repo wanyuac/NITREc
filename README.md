@@ -105,7 +105,7 @@ ATGACGCCAACCATTGAACTTATTTGTGGCCATCGCTCCATTCGCCATTTCACTGATGAACCCATTTCCG...
 ATGACGCCAACCATTGAACTTATTTGTGGCCATCGCTCCATTCGCCATTTCACTGATGAACCCATTTCCG...
 ```
 
-Since `cd-hit-est` and `cd-hit` read sequence headers till the first space, only isolate names will appear in the cluster file, thus solving the problem of sequence clustering.
+Since `cd-hit-est` and `cd-hit` read sequence headers till the first space when parameter `-d` equals zero, only isolate names will appear in the cluster file, thus solving the problem of sequence clustering.
 
 
 
