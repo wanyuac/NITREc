@@ -36,7 +36,7 @@ from Bio.Alphabet import generic_dna
 
 def parse_args():
     parser = ArgumentParser(description = "Extract regions from contigs in several FASTA files")
-    parser.add_argument("-i", type = str, required = True, help = "A no-header TSV of five columns: Genome name, File path, Contig name, Start, End")
+    parser.add_argument("-i", type = str, required = True, help = "A header-free TSV of five columns: Genome name, File path, Contig name, Start, End")
     parser.add_argument("-n", type = str, required = False, default = None, help = "A name constantly added to the first field of output sequence")
     parser.add_argument("-o", type = str, required = False, default = "target_regions.fna", help = "Name of the output FASTA file")
 

@@ -2,7 +2,7 @@
 
 """
 Compile and parse nucleotide BLAST+ outputs (outfmt 6) for a number of genomes. The output must be
-generated using command line:
+generated using command (which has been implemented in script screenGenes.pbs):
 blastn -query [FASTA file] -db [Database name] -out [sample name][delimiter][suffix].tsv -task megablast \
     -evalue [1e-5] -perc_identity [70] -max_target_seqs [10] \
     -outfmt '6 qseqid sseqid slen pident qcovhsp length mismatch gapopen qstart qend sstart send sstrand evalue bitscore sseq'
