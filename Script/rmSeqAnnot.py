@@ -1,19 +1,24 @@
 #!/usr/bin/env python
 
 """
-Remove descriptions from sequence headers in a FASTA file.
+Remove sequence annotation from sequence headers (descriptions) in a FASTA file.
 
-Example command:
+For example, input sequence
+>allele_1 Annotation
 
-cat seq.fna | python rmSeqDescr.py > seq_out.fna
+becomes
+>allele_1
+
+after using this script.
+
+Example command: cat seq.fna | python rmSeqDescr.py > seq_out.fna
 
 Copyright (C) 2020 Yu Wan <wanyuac@126.com>
 Licensed under the GNU General Public Licence version 3 (GPLv3) <https://www.gnu.org/licenses/>.
-Publication: 15 June 2020; the latest modification: 15 June 2020
+Publication: 15 June 2020; the latest modification: 5 September 2020
 """
 
 import sys
-import re
 
 def main():
     for line in sys.stdin:
