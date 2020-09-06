@@ -1,12 +1,12 @@
-# Helper Scripts for Using Database NITREcMut
+# Helper Scripts for Using Database NITREc
 
-_Yu Wan_
+Yu Wan
 
-_1 August 2020_
+Release: 1 August 2020; latest update: 5 September 2020
 
+<br/>
 
-
-Eight scripts are developed to facilitate use of database NITREcMut.
+Nine scripts are developed to facilitate use of database NITREcMut.
 
 
 
@@ -17,7 +17,7 @@ Eight scripts are developed to facilitate use of database NITREcMut.
 - `screenGenes.pbs` and its configuration profile `screenGenes.config`
 - `compileBLAST.py` compiles outputs of `screenGenes.pbs` or users' BLASTn commands
 
-**Sequence maniulation**
+**Sequence manipulation**
 
 - `extractRegionFromContig.py`
 - `rmSeqAnnot.py`
@@ -25,5 +25,7 @@ Eight scripts are developed to facilitate use of database NITREcMut.
 
 **Protein-level mutation identification**
 
-- `translateDNA.py`
-- `missenseFinder.py`
+- `translateDNA.py`: Translate coding sequences into protein sequences, given a codon table.
+- `missenseFinder.py`: Identify amino acid substitutions in query protein sequences against their most similar reference protein sequences, assuming an identical length of all sequences.
+
+- `findKnownMutations.py`: Identify mutations of interest in the output of `missenseFinder.py`.

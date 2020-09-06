@@ -1,8 +1,8 @@
 # A Database of Chromosomal Genetic Alterations Related to Nitrofurantoin Resistance in _Escherichia coli_
 
-_Yu Wan_
+Yu Wan
 
-Creation: 20 May 2020; latest update: 1 Sep 2020.
+Creation: 20 May 2020; latest update: 1 September 2020.
 
 <br/>
 

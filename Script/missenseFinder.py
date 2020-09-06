@@ -3,7 +3,7 @@ This script identifies amino acid substitutions against reference protein sequen
 Assumptions of this script for input sequences: (1) identical length, (2) high homology, (3) distinct sequence IDs.
 
 Example command:
-  python missenseFinder.py -q queries.faa -r NfsA__S.faa -o NfsA
+    python missenseFinder.py -q queries.faa -r NfsA__S.faa -o NfsA
 
 Principal output files:
     *_hits.tsv: BLASTp output in format 6
@@ -31,8 +31,8 @@ import subprocess
 
 
 def parse_arguments():
-    parser = ArgumentParser(description= "Identify amino acid substitutions in query sequences compared to their most closely related references.",
-    epilog = "This script is a helper for using database NITREc.")
+    parser = ArgumentParser(description= "Identify amino acid substitutions in query sequences compared to their most closely related references.",\
+        epilog = "This script is a helper for using database NITREc.")
     parser.add_argument("-q", "--queries", dest = "queries", type = str, required = True, help = "A multi-FASTA file of query protein sequences")
     parser.add_argument("-r", "--refs", dest = "refs", type = str, required = True, help = "A multi-FASTA file of reference protein sequences")
     parser.add_argument("-o", "--out", dest = "out", type = str, required = False, default = "protein", help = "Prefix of output filenames")
