@@ -65,9 +65,9 @@ def main():
             if args.d:
                 item = seq.description
                 if args.r:
-                    seq.description = seq.description[len(seq.id) + 1 : ]
+                    seq.description = seq.description[len(seq.id) + 1 : ]  # Drop sequence ID from the description
             else:
-                item = seq.id
+                item = seq.id  # Otherwise, the whole sequence description is copied for both the header comparison and the new sequence.
             
             # Determine whether the current sequence should be written into the output file
             if item in items_inc:
