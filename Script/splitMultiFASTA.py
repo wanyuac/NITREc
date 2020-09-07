@@ -34,7 +34,7 @@ def parse_arguments():
     parser.add_argument("-o1", type = str, required = True, help = "Output FASTA file of sequences whose IDs comprise the ID list.")
     parser.add_argument("-o2", type = str, required = False, default = None, help = "Output FASTA file of sequences whose IDs are not on the ID list. (Optional)")
     parser.add_argument("-d", action = "store_true", help = "Use the whole sequence description rather than ID for separation")
-    parser.add_argument("-r", action = "store_true", help = "Remove sequence ID from sequence description: useful for CD-HIT and is disabled when -d is used")
+    parser.add_argument("-r", action = "store_true", help = "Remove sequence ID from sequence description: useful for CD-HIT and is disabled when -d is not turned on")
 
     return parser.parse_args()
 
