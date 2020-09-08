@@ -5,6 +5,7 @@
 40	S	C
 44	Q	L
 44	Q	P
+44	Q	H
 45	P	S
 45	P	Q
 71	N	K
@@ -12,10 +13,12 @@
 93	V	G
 105	D	Y
 107	R	H
+107	R	C
 138	W	C
 148	G	S
 165	E	A
 166	G	D
 192	G	D
 192	G	A
+192	G	S
 207	R	H
