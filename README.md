@@ -119,4 +119,4 @@ Gene or cluster names are kept in sequence headers for convenience of concatenat
 
 ## 3. Content of nucleotide and protein sequences
 
-For each gene in this database, some nucleotide sequences (in subdirectory `nucl`) do not have their corresponding protein sequences (matched by sequence descriptions) in subdirectory `prot`, and vice versa, because of synonymous mutations and sometimes literature does not report nucleotide sequences that encode protein mutants. Nonetheless, the protein database (`prot`) is often adequate for functional prediction of proteins.
+For each gene in this database, some nucleotide sequences (in subdirectory `Nucl`) do not have their corresponding protein sequences (matched by sequence descriptions) in subdirectory `Prot`, and vice versa, because of synonymous mutations and sometimes literature does not report nucleotide sequences that encode protein mutants. Nonetheless, the protein database (`Prot`) is often adequate for functional prediction of proteins.
