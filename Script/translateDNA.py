@@ -16,13 +16,14 @@ Default codon table number is 11 (for prokaryotic genes).
 
 Copyright (C) 2020 Yu Wan <wanyuac@126.com>
 Licensed under the GNU General Public Licence version 3 (GPLv3) <https://www.gnu.org/licenses/>.
-Publication: 15 June 2020; the latest modification: 29 July 2020
+Publication: 15 June 2020; the latest modification: 18 September 2020
 """
 
 import sys
 from Bio import SeqIO
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
+from Bio.Data.CodonTable import TranslationError
 from argparse import ArgumentParser
 
 
@@ -30,6 +31,7 @@ def parse_arguments():
     parser = ArgumentParser("Convert nucleotide sequences into protein sequences")
     parser.add_argument("-c", type = int, required = False, default = 11, action = "store", help = "Codon table (Default: 11)")
     parser.add_argument("-k", action = "store_true", help = "Use sequence IDs as protein names without capitalise the first letter (Default: off)")
+    parser.add_argument("-s", action = "store_true", help = "Check each sequence for a valid start codon (Default: off)")
 
     return parser.parse_args()
 
@@ -39,6 +41,8 @@ def main():
     args = parse_arguments()
     codon_tab = args.c
     print("Codon table: %i" % codon_tab, file = sys.stderr)
+    if args.s:
+        print("Warning: alternative start codon will be translated as \"M\" when args.s = True.", file = sys.stderr)
 
     # Go through sequences from the stdin
     for rec in SeqIO.parse(sys.stdin, "fasta"):
@@ -50,13 +54,17 @@ def main():
         
         # Translate the DNA sequence into a protein sequence
         try:
-            # Set cds = True to check error: 'First codon is not a start codon'.
+            # Set cds = True to check error: 'First codon is not a start codon'. Exception: Bio.Data.CodonTable.TranslationError.
+            # Note that the start codon will always become "M" in this setting, which is not desirable.
             # Set to_stop = False to print "*" that represents stop codons. Otherwise, the asterisk is not printed.
-            rec_prot = rec.translate(table = codon_tab, id = seqid_new, description = descr, to_stop = True, cds = False, stop_symbol = "*")
+            rec_prot = rec.translate(table = codon_tab, id = seqid_new, description = descr, to_stop = True, cds = args.s, stop_symbol = "*")
             trans_succ = True
         except KeyError:
             print("Warning: sequence \"%s\" cannot be translated." % rec.description, file = sys.stderr)
             rec_prot = SeqRecord(Seq(''), id = '', name = '', description = '')
+            trans_succ = False
+        except TranslationError:
+            print("First codon '%s' of %s is not a start codon. Skip translation of this sequence." % (str(rec.seq)[ : 3], seqid), file = sys.stderr)
             trans_succ = False
 
         # Print protein sequences
