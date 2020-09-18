@@ -42,7 +42,7 @@ def main():
     codon_tab = args.c
     print("Codon table: %i" % codon_tab, file = sys.stderr)
     if args.s:
-        print("Warning: alternative start codon will be translated as \"M\" when args.s = True.", file = sys.stderr)
+        print("Warning: alternative start codon will be translated to \"M\" when args.s = True.", file = sys.stderr)
 
     # Go through sequences from the stdin
     for rec in SeqIO.parse(sys.stdin, "fasta"):
