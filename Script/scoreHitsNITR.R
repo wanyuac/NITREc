@@ -61,7 +61,7 @@ scoreHitsNITR <- function(hit_scores, down_sort = TRUE) {
         scores_isolate <- data.frame(Isolate = i, nfsA = scores_intrinsic[["nfsA"]],
                                      nfsB = scores_intrinsic[["nfsB"]],
                                      ribE = scores_intrinsic[["ribE"]],
-                                     oqxAB = sum(scores_acquired[["oqxA"]], scores_acquired[["oqxB"]]),
+                                     oqxAB = min(scores_acquired[["oqxA"]], scores_acquired[["oqxB"]]),
                                      nfsA_class = classes_intrinsic[["nfsA"]],
                                      nfsB_class = classes_intrinsic[["nfsB"]],
                                      ribE_class = classes_intrinsic[["ribE"]],
