@@ -16,14 +16,16 @@ Default codon table number is 11 (for prokaryotic genes).
 
 Copyright (C) 2020 Yu Wan <wanyuac@126.com>
 Licensed under the GNU General Public Licence version 3 (GPLv3) <https://www.gnu.org/licenses/>.
-Publication: 15 June 2020; the latest modification: 18 September 2020
+Publication: 15 June 2020; the latest modification: 3 October 2020
 """
 
 import sys
+import warnings
 from Bio import SeqIO
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 from Bio.Data.CodonTable import TranslationError
+from Bio import BiopythonWarning
 from argparse import ArgumentParser
 
 
@@ -53,19 +55,34 @@ def main():
         seqid_new = seqid if args.k else geneName_to_proteinName(seqid)
         
         # Translate the DNA sequence into a protein sequence
-        try:
-            # Set cds = True to check error: 'First codon is not a start codon'. Exception: Bio.Data.CodonTable.TranslationError.
-            # Note that the start codon will always become "M" in this setting, which is not desirable.
-            # Set to_stop = False to print "*" that represents stop codons. Otherwise, the asterisk is not printed.
-            rec_prot = rec.translate(table = codon_tab, id = seqid_new, description = descr, to_stop = True, cds = args.s, stop_symbol = "*")
-            trans_succ = True
-        except KeyError:
-            print("Warning: sequence \"%s\" cannot be translated." % rec.description, file = sys.stderr)
-            rec_prot = SeqRecord(Seq(''), id = '', name = '', description = '')
-            trans_succ = False
-        except TranslationError:
-            print("First codon '%s' of %s is not a start codon. Skip translation of this sequence." % (str(rec.seq)[ : 3], seqid), file = sys.stderr)
-            trans_succ = False
+        with warnings.catch_warnings():
+            """
+            https://raw.githubusercontent.com/biopython/biopython/master/Bio/Seq.py:
+            elif n % 3 != 0:
+                warnings.warn(
+                "Partial codon, len(sequence) not a multiple of three. "
+                "Explicitly trim the sequence or add trailing N before "
+                "translation. This may become an error in future.",
+                BiopythonWarning,)
+            The following code aims to catch this BiopythonWarning in order to deal with partial codons.
+            """
+            warnings.simplefilter("error", BiopythonWarning)  # Turn warnings into exceptions
+            try:
+                # Set cds = True to check error: 'First codon is not a start codon'. Exception: Bio.Data.CodonTable.TranslationError.
+                # Note that the start codon will always become "M" in this setting, which is not desirable.
+                # Set to_stop = False to print "*" that represents stop codons. Otherwise, the asterisk is not printed.
+                rec_prot = rec.translate(table = codon_tab, id = seqid_new, description = descr, to_stop = True, cds = args.s, stop_symbol = "*")
+                trans_succ = True
+            except KeyError:
+                print("Warning: sequence \"%s\" cannot be translated." % rec.description, file = sys.stderr)
+                #rec_prot = SeqRecord(Seq(''), id = '', name = '', description = '')
+                trans_succ = False
+            except TranslationError:
+                print("First codon '%s' of %s is not a start codon. Skip translation of this sequence." % (str(rec.seq)[ : 3], seqid), file = sys.stderr)
+                trans_succ = False
+            except BiopythonWarning:
+                print("Warning: partial codon is found in sequence %s. Skip translation of this sequence." % seqid, file = sys.stderr)
+                trans_succ = False
 
         # Print protein sequences
         if trans_succ:
