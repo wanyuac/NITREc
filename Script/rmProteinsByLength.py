@@ -111,7 +111,7 @@ def fasta_to_dict(fasta):
         if seqid in keys:  # A duplication occurs
             dup_count += 1
             new_id = seqid + "__" + str(dup_count)
-            print("Warning: ID duplication is found in %s. Rename: %s --> %s." % (fasta, seqid, new_id), file = sys.stderr)
+            print("Warning: ID duplication is found in %s. Rename: %s --> %s." % (fasta, record.description, new_id), file = sys.stderr)
             seq_dict[new_id] = str(record.seq)  # Save the sequence in this dictionary.
             keys.append(new_id)
         else:  # The most common scenario
