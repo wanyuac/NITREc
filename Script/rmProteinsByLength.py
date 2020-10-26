@@ -15,7 +15,7 @@ Parameters:
     aa: minimum length of protein sequences
 
 Command line:
-    python rmProteinsByLength.py --in_p NfsA.faa --in_n nfsA.fna --out_pp NfsA_l.faa --out_pf NfsA_s.faa --out_np nfsA_l.fna --out_nf nfsA_s.fna --aa 240 1> NfsA_lengths.tsv
+    python rmProteinsByLength.py --in_p NfsA.faa --in_n nfsA.fna --out_pp NfsA_l.faa --out_pf NfsA_s.faa --out_np nfsA_l.fna --out_nf nfsA_s.fna --aa 240 1> NfsA_lengths.tsv 2> NfsA_lengths.err
 
 Copyright (C) 2020 Yu Wan <wanyuac@126.com>
 Licensed under the GNU General Public Licence version 3 (GPLv3) <https://www.gnu.org/licenses/>.
@@ -73,19 +73,21 @@ def main():
     f_np = open(args.out_np, "w")
     f_nf = open(args.out_nf, "w")
 
+    print("t".join(["ID", "bp", "aa", "Decision"]), file = sys.stdout)  # Print the header line
     for c in cdss:
         i = c.seqid
         nt_record = ">%s\n%s\n" % (i, c.dna)
         pt_record = ">%s\n%s\n" % (i, c.prot)
         pt_len = c.len_aa
+        nt_len = c.len_bp
         if (pt_len < args.aa):  # Fail the length filter
             f_pf.write(pt_record)
             f_nf.write(nt_record)
-            print("%s\t%i\tFail" % (i, pt_len), file = sys.stdout)
+            print("\t".join([i, str(nt_len), str(pt_len), "Fail"]), file = sys.stdout)
         else:  # Pass the filter
             f_pp.write(pt_record)
             f_np.write(nt_record)
-            print("%s\t%i\tPass" % (i, pt_len), file = sys.stdout)
+            print("\t".join([i, str(nt_len), str(pt_len), "Pass"]), file = sys.stdout)
 
     f_pp.close()
     f_pf.close()
