@@ -73,7 +73,7 @@ def main():
     f_np = open(args.out_np, "w")
     f_nf = open(args.out_nf, "w")
 
-    print("t".join(["ID", "bp", "aa", "Decision"]), file = sys.stdout)  # Print the header line
+    print("\t".join(["ID", "bp", "aa", "Decision"]), file = sys.stdout)  # Print the header line
     for c in cdss:
         i = c.seqid
         nt_record = ">%s\n%s\n" % (i, c.dna)
