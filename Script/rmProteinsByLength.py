@@ -3,7 +3,7 @@
 """
 Remove protein sequences that are shorter than (<=) a given cutoff and also remove corresponding nucleotide sequences.
 This script is useful for creating a multi-sequence alignment for estimating dN/dS ratios. Note that this sequence does not transfer
-annotations from sequence headers.
+annotations but IDs from sequence headers.
 
 Parameters:
     in_p: input FASTA file of protein sequences
@@ -19,7 +19,7 @@ Command line:
 
 Copyright (C) 2020 Yu Wan <wanyuac@126.com>
 Licensed under the GNU General Public Licence version 3 (GPLv3) <https://www.gnu.org/licenses/>.
-Publication: 2 Oct 2020; the latest modification: 2 Oct 2020
+Publication: 2 Oct 2020; the latest modification: 26 Oct 2020
 """
 
 import os
@@ -53,14 +53,17 @@ def main():
         sys.exit(1)
 
     # Import sequences
-    ps = SeqIO.to_dict(SeqIO.parse(args.in_p, "fasta"))
-    ns = SeqIO.to_dict(SeqIO.parse(args.in_n, "fasta"))
+    # Neither SeqIO.to_dict(SeqIO.parse(args.in_p, "fasta")) nor SeqIO.to_dict(SeqIO.parse(args.in_n, "fasta")) is suitable here
+    # as sometimes input sequences have duplicated IDs. In this case, error message "ValueError: Duplicate key xxx" appears.
+    ps = fasta_to_dict(args.in_p)
+    ns = fasta_to_dict(args.in_n)
     cdss = list()  # A list of CDSs
 
     # Create a list of CDS objects
+    # Nucleotide sequences that do not have protein counterparts will be omitted.
     for i, pt in ps.items():
         if i in ns.keys():
-            cdss.append(CDS(i, str(ns[i].seq), str(pt.seq)))
+            cdss.append(CDS(i, ns[i], pt))
         else:
             print("Warning: protein sequence %s is not found in the input FASTA file of nucleotide sequences.", file = sys.stderr)
 
@@ -90,6 +93,32 @@ def main():
     f_nf.close()
 
     return
+
+
+def fasta_to_dict(fasta):
+    """
+    Importing sequences from a FASTA file and save them in a dictionary {sequence ID : sequence}. Its
+    behaviour is similar to the SeqIO.to_dict(SeqIO.parse(f, "fasta")) method but it de-duplicates
+    sequence IDs by appending an extension '__[i]' (where i is an integer) to the sequence ID. 
+    """
+    f = SeqIO.parse(fasta, "fasta")
+    keys = list()
+    seq_dict = dict()
+    dup_count = 0
+
+    for record in f:
+        seqid = record.id
+        if seqid in keys:  # A duplication occurs
+            dup_count += 1
+            new_id = seqid + "__" + str(dup_count)
+            print("Warning: ID duplication is found in %s. Rename: %s --> %s." % (fasta, seqid, new_id), file = sys.stderr)
+            seq_dict[new_id] = str(record.seq)  # Save the sequence in this dictionary.
+            keys.append(new_id)
+        else:  # The most common scenario
+            seq_dict[seqid] = str(record.seq)
+            keys.append(seqid)
+
+    return seq_dict
 
 
 class CDS:
