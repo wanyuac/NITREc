@@ -2,7 +2,7 @@
 
 Yu Wan
 
-Release: 1 August 2020; latest update: 25 September 2020
+Release: 1 Aug 2020; latest update: 27 Oct 2020
 
 <br/>
 
@@ -21,7 +21,8 @@ Nine scripts are developed to facilitate use of database NITREc.
 
 - `extractRegionFromContig.py`
 - `rmSeqAnnot.py`
-- `splitMultiFASTA.py`
+- `filterMultiFASTA.py`
+- `rmProteinsByLength.py`
 
 **Protein-level mutation identification**
 
@@ -33,3 +34,4 @@ Nine scripts are developed to facilitate use of database NITREc.
 **Prediction of nitrofurantoin susceptibility**
 
 - `scoreHitsNITR.R`: An R script offering a score function for prediction based on genetic presence-absence and alterations.
+
