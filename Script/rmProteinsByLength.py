@@ -19,7 +19,7 @@ Command line:
 
 Copyright (C) 2020 Yu Wan <wanyuac@126.com>
 Licensed under the GNU General Public Licence version 3 (GPLv3) <https://www.gnu.org/licenses/>.
-Publication: 2 Oct 2020; the latest modification: 26 Oct 2020
+Publication: 2 Oct 2020; the latest modification: 27 Oct 2020
 """
 
 import os
@@ -59,7 +59,7 @@ def main():
     ns = fasta_to_dict(args.in_n)
     cdss = list()  # A list of CDSs
 
-    # Create a list of CDS objects
+    # Create a list of CDS objects based on protein sequences
     # Nucleotide sequences that do not have protein counterparts will be omitted.
     for i, pt in ps.items():
         if i in ns.keys():
