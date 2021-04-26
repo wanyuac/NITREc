@@ -2,11 +2,13 @@
 
 Yu Wan
 
-Creation: 20 May 2020; latest update: 1 September 2020.
+Creation: 20 May 2020; latest update: 26 April 2021.
 
 <br/>
 
 This database consists of nucleotide and amino acid sequences of chromosomal genes involving in nitrofurantoin resistance in *E. coli*.
+
+_A manuscript about this database will be submitted for publication soon._
 
 
 
