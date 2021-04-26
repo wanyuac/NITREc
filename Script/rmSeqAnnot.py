@@ -11,7 +11,7 @@ becomes
 
 after using this script.
 
-Example command: cat seq.fna | python rmSeqDescr.py 1> seq_out.fna
+Example command: cat seq.fna | python rmSeqAnnot.py 1> seq_out.fna
 
 Copyright (C) 2020 Yu Wan <wanyuac@126.com>
 Licensed under the GNU General Public Licence version 3 (GPLv3) <https://www.gnu.org/licenses/>.
@@ -31,7 +31,6 @@ def main():
         print(line, file = sys.stdout)
 
     return
-
 
 if __name__ == "__main__":
     main()
