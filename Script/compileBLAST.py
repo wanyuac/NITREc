@@ -147,12 +147,12 @@ def parse_blast_line(line):
     Hit = namedtuple("Hit", HIT_ATTRS + ['sseq'])
     fields = line.split('\t')
 
-    # Use a regular expression to remove gaps ('-') in the DNA sequence.
+    # Use a regular expression to remove gaps ('-') in the DNA sequence 'sseq', which are added by BLAST to make an alignment.
     # See stackoverflow.com/questions/3939361/remove-specific-characters-from-a-string-in-python
-    hit = Hit(qseqid = fields[0], sseqid = fields[1], slen = fields[2], pident = fields[3], qcovhsp = fields[4],\
-              length = fields[5], mismatch = fields[6], gapopen = fields[7], qstart = fields[8], qend = fields[9],\
-              sstart = fields[10], send = fields[11], sstrand = '+' if fields[12] == 'plus' else '-', evalue = fields[13],\
-              bitscore = fields[14], sseq = re.sub('-', '', fields[15]))
+    hit = Hit(qseqid = fields[0], sseqid = fields[1], slen = fields[2], pident = fields[3], qcovhsp = fields[4], length = fields[5],\
+              mismatch = fields[6], gapopen = fields[7], qstart = fields[8], qend = fields[9], sstart = fields[10], send = fields[11],\
+              sstrand = '+' if fields[12] == 'plus' else '-', evalue = fields[13], bitscore = fields[14],\
+              sseq = re.sub('-', '', fields[15]))
     return hit
 
 
