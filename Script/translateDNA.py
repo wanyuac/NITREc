@@ -10,13 +10,13 @@ Command:
 Example commands:
 cat seq.fna | python translateDNA.py > seq.faa  # Print error messages on screen
 cat seq.fna | python translateDNA.py -c 11 -k 1>seq.faa 2>seq.err
-cat seq.fna | python translateDNA.py 10 | python rmSeqDescr.py > seq.faa
+cat seq.fna | python translateDNA.py -c 10 | python rmSeqDescr.py > seq.faa
 
 Default codon table number is 11 (for prokaryotic genes).
 
 Copyright (C) 2020 Yu Wan <wanyuac@126.com>
 Licensed under the GNU General Public Licence version 3 (GPLv3) <https://www.gnu.org/licenses/>.
-Publication: 15 June 2020; the latest modification: 3 October 2020
+Publication: 15 June 2020; the latest modification: 23 May 2021
 """
 
 import sys
@@ -34,7 +34,7 @@ def parse_arguments():
     parser.add_argument("-c", type = int, required = False, default = 11, action = "store", help = "Codon table (Default: 11)")
     parser.add_argument("-k", action = "store_true", help = "Use sequence IDs as protein names without capitalise the first letter (Default: off)")
     parser.add_argument("-s", action = "store_true", help = "Check each sequence for a valid start codon (Default: off)")
-
+    parser.add_argument("-f", action = "store_true", help = "Force translation even if partial codons are found. (Default: do not translate)")
     return parser.parse_args()
 
 
@@ -81,8 +81,15 @@ def main():
                 print("First codon '%s' of %s is not a start codon. Skip translation of this sequence." % (str(rec.seq)[ : 3], seqid), file = sys.stderr)
                 trans_succ = False
             except BiopythonWarning:
-                print("Warning: partial codon is found in sequence %s. Skip translation of this sequence." % seqid, file = sys.stderr)
-                trans_succ = False
+                if args.f:  # Force translation
+                    print("Warning: partial codon is found in sequence %s. Translate this sequence as per the argument '-f'." % seqid, file = sys.stderr)
+                    """ It must be rerun as the result from the last translation command will be discarded before assigning it to rec_prot when the warning is captured.
+                    Otherwise, an error of \"local variable 'rec_prot' referenced before assignment\" or duplicated record occur. """
+                    rec_prot = rec.translate(table = codon_tab, id = seqid_new, description = descr, to_stop = True, cds = False, stop_symbol = "*")
+                    trans_succ = True
+                else:
+                    print("Warning: partial codon is found in sequence %s. Skip translation of this sequence." % seqid, file = sys.stderr)
+                    trans_succ = False
 
         # Print protein sequences
         if trans_succ:
@@ -91,14 +98,12 @@ def main():
             else:
                 print(">%s %s" % (rec_prot.id, rec_prot.description), file = sys.stdout)
             print(rec_prot.seq, file = sys.stdout)
-
     return
 
 
 def geneName_to_proteinName(g):
     # Converting a gene name to protein name through capitalising the first letter of the gene name
     p = g[0].upper() + g[1 : ]
-
     return p
 
 
