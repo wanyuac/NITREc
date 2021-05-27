@@ -8,7 +8,7 @@ Command:
     translateDNA.py -c [codon table number] -k
 
 Example commands:
-cat seq.fna | python translateDNA.py > seq.faa  # Print error messages on screen
+cat seq.fna | python translateDNA.py -c 11 -s -q > seq.faa  # Print error messages on screen
 cat seq.fna | python translateDNA.py -c 11 -k 1>seq.faa 2>seq.err
 cat seq.fna | python translateDNA.py -c 10 | python rmSeqDescr.py > seq.faa
 
@@ -16,7 +16,7 @@ Default codon table number is 11 (for prokaryotic genes).
 
 Copyright (C) 2020 Yu Wan <wanyuac@126.com>
 Licensed under the GNU General Public Licence version 3 (GPLv3) <https://www.gnu.org/licenses/>.
-Publication: 15 June 2020; the latest modification: 23 May 2021
+Publication: 15 June 2020; the latest modification: 27 May 2021
 """
 
 import sys
@@ -31,10 +31,11 @@ from argparse import ArgumentParser
 
 def parse_arguments():
     parser = ArgumentParser("Convert nucleotide sequences into protein sequences")
-    parser.add_argument("-c", type = int, required = False, default = 11, action = "store", help = "Codon table (Default: 11)")
-    parser.add_argument("-k", action = "store_true", help = "Use sequence IDs as protein names without capitalise the first letter (Default: off)")
-    parser.add_argument("-s", action = "store_true", help = "Check each sequence for a valid start codon (Default: off)")
-    parser.add_argument("-f", action = "store_true", help = "Force translation even if partial codons are found. (Default: do not translate)")
+    parser.add_argument("-c", dest = "c", type = int, required = False, default = 11, action = "store", help = "Codon table (Default: 11)")
+    parser.add_argument("-k", dest = "k", action = "store_true", help = "Use sequence IDs as protein names without capitalise the first letter (Default: off)")
+    parser.add_argument("-s", dest = "s", action = "store_true", help = "Check each sequence for a valid start codon (Default: off)")
+    parser.add_argument("-f", dest = "f", action = "store_true", help = "Force translation even if partial codons are found. (Default: do not translate)")
+    parser.add_argument("-q", dest = "q", action = "store_false", help = "Quite mode: minimise non-essential messages.")
     return parser.parse_args()
 
 
@@ -42,9 +43,10 @@ def main():
     # Initialisation
     args = parse_arguments()
     codon_tab = args.c
-    print("Codon table: %i" % codon_tab, file = sys.stderr)
-    if args.s:
-        print("Warning: alternative start codon will be translated to \"M\" when args.s = True.", file = sys.stderr)
+    if args.q:  # Here, args.q = True actually means "not quite" or verbose.
+        print("Codon table: %i" % codon_tab, file = sys.stderr)
+        if args.s:
+            print("Warning: alternative start codon will be translated to \"M\" when args.s = True.", file = sys.stderr)
 
     # Go through sequences from the stdin
     for rec in SeqIO.parse(sys.stdin, "fasta"):
@@ -77,8 +79,9 @@ def main():
                 print("Warning: sequence \"%s\" cannot be translated." % rec.description, file = sys.stderr)
                 #rec_prot = SeqRecord(Seq(''), id = '', name = '', description = '')
                 trans_succ = False
-            except TranslationError:
-                print("First codon '%s' of %s is not a start codon. Skip translation of this sequence." % (str(rec.seq)[ : 3], seqid), file = sys.stderr)
+            except TranslationError:  # Occurs when option "-s" is chosen.
+                # A CDS must satisfy: (1) Starts from a start codon; (2) sequence length is a multiply of three; (3) there is a single in-frame stop codon at the end.
+                print("Warning: sequence %s is not a complete CDS. Of note, the first codon is %s. Skip translation of this sequence." % (seqid, str(rec.seq)[ : 3]), file = sys.stderr)
                 trans_succ = False
             except BiopythonWarning:
                 if args.f:  # Force translation
