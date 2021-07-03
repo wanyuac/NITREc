@@ -23,7 +23,7 @@ Notes
 
 Copyright (C) 2020 Yu Wan <wanyuac@126.com>
 Licensed under the GNU General Public Licence version 3 (GPLv3) <https://www.gnu.org/licenses/>.
-Creation: 03 Aug 2020; the latest update: 22 May 2021 (with my deep condolence to Yuan Longping).
+Creation: 3 Aug 2020; the latest update: 3 Jul 2021.
 """
 
 import sys
@@ -56,7 +56,7 @@ def main():
         for region in region_list:         
             if region.contig in contigs.keys():  # The following code block assumes that start != end.
                 seq_id = region.name + "." + region.genome if region.name != None else region.genome
-                descr_fields = [region.contig, str(region.start) + "-" + str(region.end)]
+                descr_fields = [region.name, region.contig, str(region.start) + "-" + str(region.end)]
 
                 # Create a Seq object so the reverse complementary sequence can be easily determined.
                 contig = contigs[region.contig]  # Contig is a SeqRecord object.
