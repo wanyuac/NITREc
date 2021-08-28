@@ -8,9 +8,9 @@
 # preferred on an HPC where the PBS is enabled.
 # - PBS mode:
 #    Job parameter (PBS mode): c, path to a configuration file
-#     Example command: pbs -v c="screenGenes.config" screenGenes.pbs
+#     Example command: pbs -v c="screenGenes.config" screenGenes.pbs > screenGenes.log
 # - bash mode:
-#    bash screenGenes.pbs screenGenes.config
+#    bash screenGenes.pbs screenGenes.config > screenGenes.log
 #
 # Copyright (C) 2020-2021 Yu Wan <wanyuac@126.com>
 # Licensed under the GNU General Public Licence version 3 (GPLv3) <https://www.gnu.org/licenses/>.
