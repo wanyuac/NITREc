@@ -4,10 +4,15 @@
 #PBS -l walltime=24:00:00
 #PBS -j oe
 #
-# Job parameter: c, path to a configuration file
-# Example command: pbs -v c="screenGenes.config" screenGenes.pbs
+# This script can be either run through the Portable Batch System (PBS mode) or bash (local mode). The former mode is often
+# preferred on an HPC where the PBS is enabled.
+# - PBS mode:
+#    Job parameter (PBS mode): c, path to a configuration file
+#     Example command: pbs -v c="screenGenes.config" screenGenes.pbs
+# - bash mode:
+#    bash screenGenes.pbs screenGenes.config
 #
-# Copyright (C) 2020 Yu Wan <wanyuac@126.com>
+# Copyright (C) 2020-2021 Yu Wan <wanyuac@126.com>
 # Licensed under the GNU General Public Licence version 3 (GPLv3) <https://www.gnu.org/licenses/>.
 # Creation: 28 August 2020; the latest modification: 29 August 2021
 
@@ -19,11 +24,18 @@ cd $PBS_O_WORKDIR
 # This block also loads prerequsite modules when they are specified in the configuration file.
 if [ -z "$c" ]  # Argument c can be a path relative to the current working directory
 then
-    echo 'Exit, as the mandatory configuration file is not provided.'
-    exit 0
+    echo 'Run gene screen in the local mode.'
+    if [ -z "$1" ]
+    then
+        echo 'Error: the path to the configuration file is not provided.'
+        exit 1
+    else
+        echo "Reading configurations from file ${c}."
+        source $1
+    fi
 elif [ -f "$c" ]
 then
-    echo "Reading configurations from file ${c}."
+    echo -e "Run gene screen in the PBS mode.\nReading configurations from file ${c}."
     source $c  # Read user's configurations
 else
     echo "Cannot find the configuration file ${c}."
