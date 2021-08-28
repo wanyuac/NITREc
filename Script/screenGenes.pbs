@@ -18,7 +18,6 @@
 
 ##### Jump to the current working directory to enable use of relative paths (for example, to access the configuration file)
 # The job will be run under the directory where it is submitted.
-cd $PBS_O_WORKDIR
 
 ##### Execute the configuration file to read parameters, which are set before submitting this job #####
 # This block also loads prerequsite modules when they are specified in the configuration file.
@@ -36,6 +35,7 @@ then
 elif [ -f "$c" ]
 then
     echo -e "Run gene screen in the PBS mode.\nReading configurations from file ${c}."
+    cd $PBS_O_WORKDIR
     source $c  # Read user's configurations
 else
     echo "Cannot find the configuration file ${c}."
