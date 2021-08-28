@@ -30,9 +30,9 @@ Example command:
         --codon_table 11 --add_sample_name > compile_blast.log
 Dependencies: Python 3, BioPython
 
-Copyright (C) 2020 Yu Wan <wanyuac@126.com>
+Copyright (C) 2020-2021 Yu Wan <wanyuac@126.com>
 Licensed under the GNU General Public Licence version 3 (GPLv3) <https://www.gnu.org/licenses/>.
-Publication: 11 June 2020; the latest update: 22 May 2021 (with my deep condolence to Yuan Longping).
+Publication: 11 June 2020; the latest update: 29 August 2021.
 """
 
 import os
@@ -48,7 +48,7 @@ def parse_arguments():
     parser = ArgumentParser(description = 'Compile and parse nucleotide BLAST outputs')
     parser.add_argument('--input', '-i', dest = 'input', nargs = '+', required = True, type = str,\
         help = 'Tab-delimited BLAST outputs in format 6')
-    parser.add_argument('--delimiter', '-d', dest = 'delimiter', type = str, required = True, \
+    parser.add_argument('--delimiter', '-d', dest = 'delimiter', type = str, required = False, default = "__",\
         help = 'Delimiter character(s) separating the sample name and the suffix in every input filename')
     parser.add_argument('--genes', '-g', dest = 'genes', type = str, required = True, \
         help = 'A comma-delimited vector or a one-column text file for gene names (BLAST queries) in BLAST output files')
@@ -65,7 +65,7 @@ def parse_arguments():
 
 
 HIT_ATTRS = ['qseqid', 'sseqid', 'slen', 'pident', 'qcovhsp', 'length', 'mismatch', 'gapopen', 'qstart', 'qend',\
-             'sstart', 'send', 'sstrand', 'evalue', 'bitscore']  # 15 attribute fields of interest
+             'sstart', 'send', 'sstrand', 'evalue', 'bitscore']  # 15 attribute fields of interest matching those in screenGenes.pbs.
 
 
 def main():
