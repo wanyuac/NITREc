@@ -57,10 +57,15 @@ then
 fi
 
 ##### Create the directory of BLAST databases
-if [ ! -d $DB_DIR ]
-then
-    mkdir $DB_DIR
-fi
+check_dir() {
+    if [ ! -d "$1" ]
+    then
+        mkdir $1
+    fi
+}
+
+check_dir $DB_DIR
+check_dir $OUT_DIR
 
 ##### Screen genes in assemblies
 # Print arguments
