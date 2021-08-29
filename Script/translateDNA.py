@@ -16,7 +16,7 @@ Default codon table number is 11 (for prokaryotic genes).
 
 Copyright (C) 2020 Yu Wan <wanyuac@126.com>
 Licensed under the GNU General Public Licence version 3 (GPLv3) <https://www.gnu.org/licenses/>.
-Publication: 15 June 2020; the latest modification: 27 May 2021
+Publication: 15 June 2020; the latest modification: 29 August 2021
 """
 
 import sys
@@ -34,7 +34,7 @@ def parse_arguments():
     parser.add_argument("-c", dest = "c", type = int, required = False, default = 11, action = "store", help = "Codon table (Default: 11)")
     parser.add_argument("-k", dest = "k", action = "store_true", help = "Use sequence IDs as protein names without capitalise the first letter (Default: off)")
     parser.add_argument("-s", dest = "s", action = "store_true", help = "Check each sequence for a valid start codon and a single in-frame stop codon at the end (Default: off)")
-    parser.add_argument("-f", dest = "f", action = "store_true", help = "Force translation even if partial codons are found. (Default: do not translate)")
+    parser.add_argument("-f", dest = "f", action = "store_true", help = "Force translation even if partial codons or failed CDS checks are encountered. (Default: do not translate)")
     parser.add_argument("-q", dest = "q", action = "store_false", help = "Quite mode: minimise non-essential messages.")
     return parser.parse_args()
 
@@ -82,7 +82,12 @@ def main():
             except TranslationError:  # Occurs when option "-s" is chosen.
                 # A CDS must satisfy: (1) Starts from a start codon; (2) sequence length is a multiply of three; (3) there is a single in-frame stop codon at the end.
                 print("Warning: sequence %s is not a complete CDS, which requires a start codon and a single in-frame stop codon at the end. Of note, the first codon is %s. Skip translation of this sequence." % (seqid, str(rec.seq)[ : 3]), file = sys.stderr)
-                trans_succ = False
+                if args.f:
+                    print("Translate sequence %s as per the argument '-f', although it failed the CDS check." % seqid, file = sys.stderr)
+                    rec_prot = rec.translate(table = codon_tab, id = seqid_new, description = descr, to_stop = True, cds = False, stop_symbol = "*")
+                    trans_succ = True
+                else:
+                    trans_succ = False
             except BiopythonWarning:
                 if args.f:  # Force translation
                     print("Warning: partial codon is found in sequence %s. Translate this sequence as per the argument '-f'." % seqid, file = sys.stderr)
