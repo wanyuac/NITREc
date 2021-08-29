@@ -33,7 +33,7 @@ def parse_arguments():
     parser = ArgumentParser("Convert nucleotide sequences into protein sequences")
     parser.add_argument("-c", dest = "c", type = int, required = False, default = 11, action = "store", help = "Codon table (Default: 11)")
     parser.add_argument("-k", dest = "k", action = "store_true", help = "Use sequence IDs as protein names without capitalise the first letter (Default: off)")
-    parser.add_argument("-s", dest = "s", action = "store_true", help = "Check each sequence for a valid start codon (Default: off)")
+    parser.add_argument("-s", dest = "s", action = "store_true", help = "Check each sequence for a valid start codon and a single in-frame stop codon at the end (Default: off)")
     parser.add_argument("-f", dest = "f", action = "store_true", help = "Force translation even if partial codons are found. (Default: do not translate)")
     parser.add_argument("-q", dest = "q", action = "store_false", help = "Quite mode: minimise non-essential messages.")
     return parser.parse_args()
