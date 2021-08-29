@@ -81,7 +81,7 @@ def main():
                 trans_succ = False
             except TranslationError:  # Occurs when option "-s" is chosen.
                 # A CDS must satisfy: (1) Starts from a start codon; (2) sequence length is a multiply of three; (3) there is a single in-frame stop codon at the end.
-                print("Warning: sequence %s is not a complete CDS. Of note, the first codon is %s. Skip translation of this sequence." % (seqid, str(rec.seq)[ : 3]), file = sys.stderr)
+                print("Warning: sequence %s is not a complete CDS, which requires a start codon and a single in-frame stop codon at the end. Of note, the first codon is %s. Skip translation of this sequence." % (seqid, str(rec.seq)[ : 3]), file = sys.stderr)
                 trans_succ = False
             except BiopythonWarning:
                 if args.f:  # Force translation
