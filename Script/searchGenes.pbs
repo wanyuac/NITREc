@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -N ScreenGenes
+#PBS -N searchGenes
 #PBS -l select=1:ncpus=1:mem=2gb
 #PBS -l walltime=24:00:00
 #PBS -j oe
@@ -8,13 +8,13 @@
 # preferred on an HPC where the PBS is enabled.
 # - PBS mode:
 #    Job parameter (PBS mode): c, path to a configuration file
-#     Example command: pbs -v c="screenGenes.config" screenGenes.pbs > screenGenes.log
+#     Example command: pbs -v c="searchGenes.config" searchGenes.pbs > searchGenes.log
 # - bash mode:
-#    bash screenGenes.pbs screenGenes.config > screenGenes.log
+#    bash searchGenes.pbs searchGenes.config > searchGenes.log
 #
 # Copyright (C) 2020-2021 Yu Wan <wanyuac@126.com>
 # Licensed under the GNU General Public Licence version 3 (GPLv3) <https://www.gnu.org/licenses/>.
-# Creation: 28 August 2020; the latest modification: 29 August 2021
+# Creation: 28 August 2020; the latest modification: 16 September 2021
 
 ##### Jump to the current working directory to enable use of relative paths (for example, to access the configuration file)
 # The job will be run under the directory where it is submitted.
