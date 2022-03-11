@@ -10,7 +10,7 @@ This database consists of nucleotide and amino acid sequences of chromosomal gen
 
 **Citation**
 
-Yu Wan, Ewurabena Mills, Rhoda C.Y. Leung, Ana Vieira, Elita Jauneikaite, Xiangyun Zhi, Nicholas J Croucher, Neil Woodford, Matthew J. Ellington, Shiranee Sriskandan. Alterations in chromosomal genes *nfsA*, *nfsB*, and *ribE* are associated with nitrofurantoin resistance in *Escherichia coli* from the United Kingdom. *Microbial Genomics* 2021; 7. DOI: [10.1099/mgen.0.000702](https://doi.org/10.1099/mgen.0.000702).
+Yu Wan, Ewurabena Mills, Rhoda C.Y. Leung, Ana Vieira, Elita Jauneikaite, Xiangyun Zhi, Nicholas J Croucher, Neil Woodford, Matthew J. Ellington, Shiranee Sriskandan. **Alterations in chromosomal genes *nfsA*, *nfsB*, and *ribE* are associated with nitrofurantoin resistance in *Escherichia coli* from the United Kingdom**. *Microbial Genomics* 2021; 7. DOI: [10.1099/mgen.0.000702](https://doi.org/10.1099/mgen.0.000702).
 
 <!-- Yu Wan, Ewurabena Mills, Rhoda C.Y. Leung, Ana Vieira, Elita Jauneikaite, Xiangyun Zhi, Nicholas J Croucher, Neil Woodford, Matthew J. Ellington, Shiranee Sriskandan. Diverse Genetic Determinants of Nitrofurantoin Resistance in UK *Escherichia coli*. *bioRxiv* 2021.05.27.446087; doi: https://doi.org/10.1101/2021.05.27.446087. -->
 
