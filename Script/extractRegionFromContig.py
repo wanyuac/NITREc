@@ -23,7 +23,7 @@ Notes
 
 Copyright (C) 2020 Yu Wan <wanyuac@126.com>
 Licensed under the GNU General Public Licence version 3 (GPLv3) <https://www.gnu.org/licenses/>.
-Creation: 3 Aug 2020; the latest update: 3 Jul 2021.
+Creation: 3 Aug 2020; the latest update: 19 May 2022.
 """
 
 import sys
@@ -31,7 +31,7 @@ from argparse import ArgumentParser
 from collections import namedtuple
 from Bio import SeqIO
 from Bio.Seq import Seq
-from Bio.Alphabet import generic_dna
+# from Bio.Alphabet import generic_dna  # Is no longer supported by BioPython.
 
 
 def parse_args():
@@ -66,7 +66,8 @@ def main():
                     new_seq = seq[region.start - 1 : region.end]
                 else:  # Extract a sequence from the reverse complementary strand of the contig
                     descr_fields.append("-")
-                    new_seq = str(Seq(seq[region.end - 1 : region.start], generic_dna).reverse_complement())
+                    # new_seq = str(Seq(seq[region.end - 1 : region.start], generic_dna).reverse_complement())
+                    new_seq = str(Seq(seq[region.end - 1 : region.start]).reverse_complement())
 
                 # Write the extracted sequence
                 print(">%s %s" % (seq_id, "|".join(descr_fields)), file = fasta_out)
