@@ -26,6 +26,7 @@ Licensed under the GNU General Public Licence version 3 (GPLv3) <https://www.gnu
 Creation: 3 Aug 2020; the latest update: 19 May 2022.
 """
 
+import os
 import sys
 from argparse import ArgumentParser
 from collections import namedtuple
@@ -50,30 +51,31 @@ def main():
 
     # Loop through FASTA files
     for fasta_in, region_list in regions.items():
-        contigs = SeqIO.to_dict(SeqIO.parse(fasta_in, "fasta"))  # Import the whole FASTA file
-        
-        # Go through target regions specified for the current FASTA file
-        for region in region_list:         
-            if region.contig in contigs.keys():  # The following code block assumes that start != end.
-                seq_id = region.name + "." + region.genome if region.name != None else region.genome
-                descr_fields = [region.name, region.contig, str(region.start) + "-" + str(region.end)]
+        if (os.path.exists(fasta_in)):
+            contigs = SeqIO.to_dict(SeqIO.parse(fasta_in, "fasta"))  # Import the whole FASTA file
+            for region in region_list:  # Go through target regions specified for the current FASTA file
+                if region.contig in contigs.keys():  # The following code block assumes that start != end.
+                    seq_id = region.name + "." + region.genome if region.name != None else region.genome
+                    descr_fields = [region.name, region.contig, str(region.start) + "-" + str(region.end)]
 
-                # Create a Seq object so the reverse complementary sequence can be easily determined.
-                contig = contigs[region.contig]  # Contig is a SeqRecord object.
-                seq = str(contig.seq)  # Convert a Seq object into a string
-                if region.end > region.start:  # The sequence to be extracted is on the positive strand of the contig.
-                    descr_fields.append("+")
-                    new_seq = seq[region.start - 1 : region.end]
-                else:  # Extract a sequence from the reverse complementary strand of the contig
-                    descr_fields.append("-")
-                    # new_seq = str(Seq(seq[region.end - 1 : region.start], generic_dna).reverse_complement())
-                    new_seq = str(Seq(seq[region.end - 1 : region.start]).reverse_complement())
+                    # Create a Seq object so the reverse complementary sequence can be easily determined.
+                    contig = contigs[region.contig]  # Contig is a SeqRecord object.
+                    seq = str(contig.seq)  # Convert a Seq object into a string
+                    if region.end > region.start:  # The sequence to be extracted is on the positive strand of the contig.
+                        descr_fields.append("+")
+                        new_seq = seq[region.start - 1 : region.end]
+                    else:  # Extract a sequence from the reverse complementary strand of the contig
+                        descr_fields.append("-")
+                        # new_seq = str(Seq(seq[region.end - 1 : region.start], generic_dna).reverse_complement())
+                        new_seq = str(Seq(seq[region.end - 1 : region.start]).reverse_complement())
 
-                # Write the extracted sequence
-                print(">%s %s" % (seq_id, "|".join(descr_fields)), file = fasta_out)
-                print(new_seq, file = fasta_out)  # No line wrap applies here for ease of sequence alignment.
-            else:
-                print("Warning: contig %s does not exist in FASTA file %s." % (region.contig, fasta_in))
+                    # Write the extracted sequence
+                    print(">%s %s" % (seq_id, "|".join(descr_fields)), file = fasta_out)
+                    print(new_seq, file = fasta_out)  # No line wrap applies here for ease of sequence alignment.
+                else:
+                    print("Warning: contig %s does not exist in FASTA file %s." % (region.contig, fasta_in))
+        else:
+            print("Warning: Skipped input file " + fasta_in + " because it does not exist.")
     fasta_out.close()
     return
 
