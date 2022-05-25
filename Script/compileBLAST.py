@@ -32,7 +32,7 @@ Dependencies: Python 3, BioPython
 
 Copyright (C) 2020-2021 Yu Wan <wanyuac@126.com>
 Licensed under the GNU General Public Licence version 3 (GPLv3) <https://www.gnu.org/licenses/>.
-Publication: 11 June 2020; the latest update: 29 August 2021.
+Publication: 11 June 2020; the latest update: 25 May 2022.
 """
 
 import os
