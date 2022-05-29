@@ -8,16 +8,11 @@ Release: 1 Aug 2020; latest update: 29 May 2022
 
 This directory comprises scripts developed to facilitate use of database NITREc. The scripts can also be used for other analyses.
 
-**Installation**
-
-```bash
-git clone https://github.com/wanyuac/NITREc.git
-```
-
 **Table of contents**
 
-1. [Functional classification of scripts](#sec1)
-2. [Gene detection based on nucleotide sequences](#sec2)
+1. [Installation](#sec1)
+2. [Functional classification of scripts](#sec2)
+3. [Gene detection based on nucleotide sequences](#sec3)
     - [Step 1.  Create a FASTA file of query sequences and a list of subject genome names](#step1)
     - [Step 2. Configure the detection job](#step2)
     - [Step 3. Use `searchGenes.pbs` to detect genes from FASTA files](#step3)
@@ -25,7 +20,14 @@ git clone https://github.com/wanyuac/NITREc.git
 
 <br/>
 
-## <a name = "sec1">1. Functional classification of scripts</a>
+## 1. <a name = "sec1">Installation</a>
+
+```bash
+git clone https://github.com/wanyuac/NITREc.git
+```
+<br/>
+
+## <a name = "sec2">2. Functional classification of scripts</a>
 
 **Gene detection (DNA)**
 
@@ -52,7 +54,7 @@ git clone https://github.com/wanyuac/NITREc.git
 
 <br/>
 
-## <a name = "sec2">2. Gene detection based on nucleotide sequences</a>
+## <a name = "sec3">3. Gene detection based on nucleotide sequences</a>
 
 ###  <a name = "step1">Step 1.  Create a FASTA file of query sequences and a list of subject genome names</a>
 
