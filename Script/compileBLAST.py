@@ -22,17 +22,17 @@ Outputs: (created under the current working directory)
 
 Note:
     Path to a text file can be given to the argument '--genes' using the syntax: '--genes File:$file_path'. The text file ($file_path)
-    lists a gene name per line. The list can be easily generated using the command:
+    lists a gene name per line. The list can be easily generated from the query FASTA file using the command:
     cat *.fna | grep '>' | cut -d ' ' -f 1 | sed 's/>//g' > genes.txt  # The 'cut' command removes sequence annotations.
 
 Example command:
-    python compileBLAST.py --input *__megaBLAST.tsv --delimiter '__' --genes 'gene1,gene2,gene3' --output study1 --translate \
+    python compileBLAST.py --input *__megablast.tsv --delimiter '__' --genes 'gene1,gene2,gene3' --output study1 --translate \
         --codon_table 11 --add_sample_name > compile_blast.log
 Dependencies: Python 3, BioPython
 
 Copyright (C) 2020-2021 Yu Wan <wanyuac@126.com>
 Licensed under the GNU General Public Licence version 3 (GPLv3) <https://www.gnu.org/licenses/>.
-Publication: 11 June 2020; the latest update: 25 May 2022.
+Publication: 11 June 2020; the latest update: 29 May 2022.
 """
 
 import os

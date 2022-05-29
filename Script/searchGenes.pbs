@@ -6,15 +6,15 @@
 #
 # This script can be either run through the Portable Batch System (PBS mode) or bash (local mode). The former mode is often
 # preferred on an HPC where the PBS is enabled.
-# - PBS mode:
+# - PBS mode (on a high-performance computing cluster where the PBS job scheduler is enabled):
 #    Job parameter (PBS mode): c, path to a configuration file
 #     Example command: pbs -v c="searchGenes.config" searchGenes.pbs > searchGenes.log
-# - bash mode:
+# - bash mode (without PBS):
 #    bash searchGenes.pbs searchGenes.config > searchGenes.log
 #
-# Copyright (C) 2020-2021 Yu Wan <wanyuac@126.com>
+# Copyright (C) 2020-2022 Yu Wan <wanyuac@126.com>
 # Licensed under the GNU General Public Licence version 3 (GPLv3) <https://www.gnu.org/licenses/>.
-# Creation: 28 August 2020; the latest modification: 16 September 2021
+# Creation: 28 August 2020; the latest modification: 29 May 2022
 
 ##### Jump to the current working directory to enable use of relative paths (for example, to access the configuration file)
 # The job will be run under the directory where it is submitted.
@@ -28,11 +28,11 @@ then
     then
         echo 'Error: the path to the configuration file is not provided.'
         exit 1
-    else
+    else  # bash mode, in which searchGenes.pbs is used as a usual bash script without submission to the PBS
         echo "Reading configurations from file ${c}."
         source $1
     fi
-elif [ -f "$c" ]
+elif [ -f "$c" ]  # PBS mode
 then
     echo -e "Run gene screen in the PBS mode.\nReading configurations from file ${c}."
     cd $PBS_O_WORKDIR
@@ -54,6 +54,11 @@ then
     else
         conda activate $CONDA_ENV
     fi
+elif [ ! -z "$BLASTN_DIR" ]
+then
+    export PATH="$BLASTN_DIR":$PATH
+else
+    echo 'Going to run BLAST straightaway without loading any environmental module or conda environment or changing the PATH variable.'
 fi
 
 ##### Create the directory of BLAST databases
