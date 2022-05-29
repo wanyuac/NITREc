@@ -14,9 +14,18 @@ This directory comprises scripts developed to facilitate use of database NITREc.
 git clone https://github.com/wanyuac/NITREc.git
 ```
 
+**Table of contents**
+
+1. [Functional classification of scripts](#sec1)
+2. [Gene detection based on nucleotide sequences](#sec2)
+    - [Step 1.  Create a FASTA file of query sequences and a list of subject genome names](#step1)
+    - [Step 2. Configure the detection job](#step2)
+    - [Step 3. Use `searchGenes.pbs` to detect genes from FASTA files](#step3)
+    - [Step 4. Compile output TSV files into a table](#step4)
+
 <br/>
 
-## 1. Functional classification of scripts
+## <a name = "sec1">1. Functional classification of scripts</a>
 
 **Gene detection (DNA)**
 
@@ -43,9 +52,9 @@ git clone https://github.com/wanyuac/NITREc.git
 
 <br/>
 
-## 2. Gene detection based on nucleotide sequences
+## <a name = "sec2">2. Gene detection based on nucleotide sequences</a>
 
-###  Step 1.  Create a FASTA file of query sequences and a list of subject genome names
+###  <a name = "step1">Step 1.  Create a FASTA file of query sequences and a list of subject genome names</a>
 
 A query is the DNA sequence to be searched against a genome assembly (the subject). FASTA files in `NITREc/Seq/Nucl/` are examples of query sequences. The FASTA file of query sequences is an essential input for script `searchGenes.pbs`.
 
@@ -62,12 +71,12 @@ isolate_05
 Note that `subjects_genomes.txt` must be a plain-text file where each line is ended by the Unix/Linux style newline characters `\n`. Otherwise, isolate names may not be read correctly by `searchGenes.pbs` and cause problems to its output. For Windows/Mac OS users, the newline character can be specified in a text editor [with the utility such as "Convert > Line Break Style > To UNIX (LF only)"] or with the `dos2unix` program on Linux:
 
 ```bash
-dos2unix subjects.txt
+dos2unix subject_genomes.txt
 ```
 
 
 
-### Step 2. Configure the detection job
+### <a name = "step2">Step 2. Configure the detection job</a>
 
 Copy `searchGenes.config` to your working directory (for instance, `~/work) and configure its variable statement in a plain-text editor. Assuming the `NITREc` repository has been downloaded to `~/bin`:
 
@@ -107,7 +116,7 @@ MAX_EVALUE='1e-5'  # Maximum acceptable e-value
 
 
 
-### Step 3. Use `searchGenes.pbs` to detect genes from FASTA files
+### <a name = "step3">Step 3. Use `searchGenes.pbs` to detect genes from FASTA files<a/>
 
 **Approach 1: PBS mode**
 
@@ -137,7 +146,7 @@ chmod 750 ~/bin/NITREc/Script/searchGenes.pbs
 
 
 
-### Step 4. Compile output TSV files into a table
+### <a name = "step4">Step 4. Compile output TSV files into a table</a>
 
 Python script `compileBLAST.py` has been developed to compile output tab-delimited (TSV) files into a large TSV file, which can be imported into R, Excel, or LibreOffice Calc as a data frame or table for further analysis. This script requires Python v3 and a compatible [Biopython](https://biopython.org/) package.
 
