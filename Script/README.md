@@ -126,7 +126,7 @@ On a high-performance computing cluster where the PBS job scheduler is enabled:
 
 ```bash
 cd ~/work
-pbs -v c="searchGenes_demo.config" ~/bin/NITREc/Script/searchGenes.pbs > searchGenes.log
+qsub -v c="searchGenes_demo.config" ~/bin/NITREc/Script/searchGenes.pbs > searchGenes.log
 ```
 
 **Approach 2: bash mode**

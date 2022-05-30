@@ -8,7 +8,7 @@
 # preferred on an HPC where the PBS is enabled.
 # - PBS mode (on a high-performance computing cluster where the PBS job scheduler is enabled):
 #    Job parameter (PBS mode): c, path to a configuration file
-#     Example command: pbs -v c="searchGenes.config" searchGenes.pbs > searchGenes.log
+#     Example command: qsub -v c="searchGenes.config" searchGenes.pbs > searchGenes.log
 # - bash mode (without PBS):
 #    bash searchGenes.pbs searchGenes.config > searchGenes.log
 #
