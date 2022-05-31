@@ -25,14 +25,14 @@ Note:
     lists a gene name per line. The list can be easily generated from the query FASTA file using the command:
     cat *.fna | grep '>' | cut -d ' ' -f 1 | sed 's/>//g' > genes.txt  # The 'cut' command removes sequence annotations.
 
-Example command:
-    python compileBLAST.py --input *__megablast.tsv --delimiter '__' --genes 'gene1,gene2,gene3' --output study1 --translate \
-        --codon_table 11 --add_sample_name > compile_blast.log
+Example commands:
+    python compileBLAST.py --input *__megablast.tsv --delimiter '__' --genes 'File:$HOME/work/gene_list.txt' --output study1 --add_sample_name > compile_blast.log
+    python compileBLAST.py --input *__megablast.tsv --delimiter '__' --genes 'gene1,gene2,gene3' --output study1 --translate --codon_table 11 --add_sample_name > compile_blast.log
 Dependencies: Python 3, BioPython
 
 Copyright (C) 2020-2021 Yu Wan <wanyuac@126.com>
 Licensed under the GNU General Public Licence version 3 (GPLv3) <https://www.gnu.org/licenses/>.
-Publication: 11 June 2020; the latest update: 29 May 2022.
+Publication: 11 June 2020; the latest update: 31 May 2022.
 """
 
 import os
@@ -58,7 +58,7 @@ def parse_arguments():
         help = 'Translate DNA sequences into protein sequences using a specific codon table')
     parser.add_argument('--codon_table', '-c', dest = 'codon_table', required = False, type = int, default = 11, \
         help = 'Index of codon tables for translating coding sequences into protein sequences')
-    parser.add_argument('--add_sample_name', '-a', action = 'store_true', required = False,\
+    parser.add_argument('--add_sample_name', '-a', dest = "add_sample_name", action = 'store_true', required = False,\
         help = 'Append a sample name to each sequence ID (useful for sequence clustering)')
 
     return parser.parse_args()
@@ -73,65 +73,71 @@ def main():
 
     # Create output files, keep them open, and save their handles
     genes = make_gene_list(args.genes)
-    out_tsv = open(args.output + '__aln.tsv', 'w')  # A summary of alignments
+    out_tsv = open(args.output + '__aln.tsv', 'w')  # Output TSV file: a summary of BLAST hits
     out_tsv.write('\t'.join(['sample'] + HIT_ATTRS) + '\n')  # The write method does not automatically append a newline character to the end of the output line.
     out_fna_handles = {}
     if args.translate:
         genes_prot = {}  # Protein names from gene names
-        out_faa_handles = {}
+        out_faa_handles = {}  # A dictionary of file handles for output
 
     for g in genes:
-        p = g[0].upper() + g[1 : ]  # Function capitalize() changes other letters to lower case
+        p = g[0].upper() + g[1 : ]  # Function capitalize() changes other capital letters to lower case, which is not desirable. For example, "ribE".capitalize() returns 'Ribe'.
         fna_out = open('%s__%s.fna' % (args.output, g), 'w')
         out_fna_handles[g] = fna_out
         
         if args.translate:
             genes_prot[g] = p  # Protein name
-            faa_out = open('%s__%s.faa' % (args.output, p), 'w')
+            faa_out = open('%s__%s.faa' % (args.output, p), 'w')  # An output file handle for the current protein
             out_faa_handles[p] = faa_out
 
     # Pool and parse BLAST outputs
     for tsv in args.input:
-        sample_name = extract_sample_name(tsv, args.delimiter)
-        print('Parsing BLAST output of sample %s.' % sample_name)
-        with open(tsv, 'r') as f:
-            lines = f.read().splitlines()
-        
-        # Parse each line and write data into output files
-        for line in lines:
-            hit = parse_blast_line(line)
-            g = hit.qseqid  # Name of the query gene
-            if g in genes:
-                # Write alignment information
-                out_tsv.write('\t'.join([sample_name, hit.qseqid, hit.sseqid, hit.slen, hit.pident, hit.qcovhsp, hit.length,\
-                              hit.mismatch, hit.gapopen, hit.qstart, hit.qend, hit.sstart, hit.send, hit.sstrand, hit.evalue,\
-                              hit.bitscore]) + '\n')
+        if os.path.exists(tsv):
+            if os.path.getsize(tsv) > 0:
+                sample_name = extract_sample_name(tsv, args.delimiter)
+                print('Parsing BLAST output of sample %s.' % sample_name)
+                with open(tsv, 'r') as f:
+                    lines = f.read().splitlines()
                 
-                # Prepare a DNA record
-                seq_id = '.'.join([g, sample_name]) if args.add_sample_name else g
-                descr = '|'.join([g, sample_name, hit.sseqid, hit.sstart + '-' + hit.send, hit.sstrand])  # It changes later when args.translate = True.
-                seq_dna = SeqRecord(Seq(hit.sseq), id = seq_id, name = '', description = '')  # The description will be filled later.
+                # Parse each line and write data into output files
+                for line in lines:
+                    hit = parse_blast_line(line)
+                    g = hit.qseqid  # Name of the query gene
+                    if g in genes:
+                        # Write alignment information
+                        out_tsv.write('\t'.join([sample_name, hit.qseqid, hit.sseqid, hit.slen, hit.pident, hit.qcovhsp, hit.length,\
+                                    hit.mismatch, hit.gapopen, hit.qstart, hit.qend, hit.sstart, hit.send, hit.sstrand, hit.evalue,\
+                                    hit.bitscore]) + '\n')
+                        
+                        # Prepare a DNA record to be written into the corresponding FASTA file
+                        seq_id = '.'.join([g, sample_name]) if args.add_sample_name else g
+                        descr = '|'.join([g, sample_name, hit.sseqid, hit.sstart + '-' + hit.send, hit.sstrand])  # It changes later when args.translate = True.
+                        seq_dna = SeqRecord(Seq(hit.sseq), id = seq_id, name = '', description = '')  # The description will be filled later.
 
-                # Write the protein sequence when it is required
-                if args.translate:
-                    # Translate DNA till the first stop codon
-                    try:
-                        seq_prot = seq_dna.translate(table = args.codon_table, id = seq_id[0].upper() + seq_id[1 : ],\
-                                   description = '', to_stop = True, cds = False)  # Set cds = True to check error: 'First codon is not a start codon'.
-                    except KeyError:
-                        print('Warning: sequence of %s in %s cannot be translated.' % (g, sample_name))
-                        seq_prot = SeqRecord(Seq(''), id = '', name = '', description = '')
-                    
-                    if len(seq_prot.seq) > 0:  # Sometimes partial sequences do not have any protein product.
-                        descr = descr + '|CDS'  # This sequence can be translated into a protein (or polypeptide) sequence
-                        seq_prot.description = descr
-                        write_fasta(out_faa_handles[genes_prot[g]], seq_prot)
-                    else:
-                        descr = descr + '|NA'  # No translation is available and to be written, but change the sequence description
+                        # Write the protein sequence when it is required
+                        if args.translate:
+                            # Translate DNA till the first stop codon
+                            try:
+                                seq_prot = seq_dna.translate(table = args.codon_table, id = seq_id[0].upper() + seq_id[1 : ],\
+                                        description = '', to_stop = True, cds = False)  # Set cds = True to check error: 'First codon is not a start codon'.
+                            except KeyError:
+                                print('Warning: sequence of %s in %s cannot be translated.' % (g, sample_name))
+                                seq_prot = SeqRecord(Seq(''), id = '', name = '', description = '')
+                            
+                            if len(seq_prot.seq) > 0:  # Sometimes partial sequences do not have any protein product.
+                                descr = descr + '|CDS'  # This sequence can be translated into a protein (or polypeptide) sequence
+                                seq_prot.description = descr
+                                write_fasta(out_faa_handles[genes_prot[g]], seq_prot)
+                            else:
+                                descr = descr + '|NA'  # No translation is available and to be written, but change the sequence description
 
-                # Finally, write the DNA sequence
-                seq_dna.description = descr
-                write_fasta(out_fna_handles[g], seq_dna)
+                        # Finally, write the DNA sequence
+                        seq_dna.description = descr
+                        write_fasta(out_fna_handles[g], seq_dna)
+            else:
+                print("Warning: skipped empty input file " + tsv)
+        else:
+            print("Warning: skipped inaccessible input file " + tsv)
 
     # Close output files
     out_tsv.close()
