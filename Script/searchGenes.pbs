@@ -1,6 +1,6 @@
 #!/bin/bash
 #PBS -N searchGenes
-#PBS -l select=1:ncpus=1:mem=2gb
+#PBS -l select=1:ncpus=1:mem=4gb
 #PBS -l walltime=24:00:00
 #PBS -j oe
 #
@@ -14,7 +14,7 @@
 #
 # Copyright (C) 2020-2022 Yu Wan <wanyuac@126.com>
 # Licensed under the GNU General Public Licence version 3 (GPLv3) <https://www.gnu.org/licenses/>.
-# Creation: 28 August 2020; the latest modification: 30 May 2022
+# Creation: 28 August 2020; the latest modification: 22 July 2022
 
 ##### Jump to the current working directory to enable use of relative paths (for example, to access the configuration file)
 # The job will be run under the directory where it is submitted.
@@ -88,5 +88,5 @@ do
     then
         makeblastdb -in ${SUBJECT_DIR}/${g}.${SUBJECT_SUFFIX} -out ${DB_DIR}/$g -dbtype nucl
     fi
-    blastn -query $QUERIES -db ${DB_DIR}/$g -out ${g}__${TASK}.tsv -task $TASK -evalue $MAX_EVALUE -perc_identity $MIN_IDENTITY -max_target_seqs $MAX_TARGET_SEQS -outfmt '6 qseqid sseqid slen pident qcovhsp length mismatch gapopen qstart qend sstart send sstrand evalue bitscore sseq'
+    blastn -query $QUERIES -db ${DB_DIR}/$g -out ${OUT_DIR}/${g}__${TASK}.tsv -task $TASK -evalue $MAX_EVALUE -perc_identity $MIN_IDENTITY -max_target_seqs $MAX_TARGET_SEQS -outfmt '6 qseqid sseqid slen pident qcovhsp length mismatch gapopen qstart qend sstart send sstrand evalue bitscore sseq'
 done < $GENOMES
