@@ -4,6 +4,8 @@ Yu Wan
 
 Creation: 20 May 2020; latest update: 11 March 2022.
 
+[![DOI](https://zenodo.org/badge/265615310.svg)](https://zenodo.org/badge/latestdoi/265615310)
+
 <br/>
 
 This database consists of nucleotide and amino acid sequences of chromosomal genes involving in nitrofurantoin resistance in *E. coli*.
@@ -14,8 +16,6 @@ Yu Wan, Ewurabena Mills, Rhoda C.Y. Leung, Ana Vieira, Elita Jauneikaite, Xiangy
 
 <!-- Yu Wan, Ewurabena Mills, Rhoda C.Y. Leung, Ana Vieira, Elita Jauneikaite, Xiangyun Zhi, Nicholas J Croucher, Neil Woodford, Matthew J. Ellington, Shiranee Sriskandan. Diverse Genetic Determinants of Nitrofurantoin Resistance in UK *Escherichia coli*. *bioRxiv* 2021.05.27.446087; doi: https://doi.org/10.1101/2021.05.27.446087. -->
 
-
-
 ## 1. Format of sequence headers
 
 NITREcMut database uses what we call ISPA (**I**D, **s**ource, **p**roduct, and **a**dditional note) format. Specifically, the header of every sequence in the NITREcMut database is comprised of two standard domains, namely, sequence ID and sequence annotation (Both domains constitute a sequence description), that are accessible through an object of BioPython's `SeqRecord` class:
@@ -24,15 +24,11 @@ NITREcMut database uses what we call ISPA (**I**D, **s**ource, **p**roduct, and 
 >{Sequence ID} {Sequence annotation}
 ```
 
-
-
 Specifically, we use the sequence ID for the allele name, while the domain of sequence annotation consists of bar-delimited fields describing gene or cluster names, sequence source, product, etc., as shown below:
 
 ```fasta
 >[Allele name] [Gene or cluster name]|[Genome name]|[NCBI nucleotide accession or contig name]|[Coordinates]|[Coding strand for the current product]|[Locus tag]|[NCBI protein accession]|[Product name];[Additional information]
 ```
-
-
 
 Notes about these fields:
 
@@ -48,8 +44,6 @@ Notes about these fields:
 - Additional information, such as mutation information, can be appended to the sequence description using a semicolon as a separator.
 - 'NA' is a space holder for empty fields. For example, it is used when the protein accession number or locus tag has not been assigned.
 
-
-
 Two examples of legit headers of nucleotide and protein sequences:
 
 ```fasta
@@ -62,11 +56,7 @@ Two examples of legit headers of nucleotide and protein sequences:
 >NfsA nfsA|IN07|7|141755-142477|-|NA|NA|Nitroreductase NfsA
 ```
 
-
-
 The design of sequence headers aims to be compatible to the [ResFinder](https://cge.cbs.dtu.dk/services/ResFinder/) database and keep database curation simple. Although I am familiar with the [SRST2-compatible format](https://github.com/katholt/srst2), my experience of creating its [ARGannot_r2.fasta](https://github.com/katholt/srst2/blob/master/data/ARGannot_r2.fasta) database suggests that this stringent format requires much effort for expanding the database.
-
-
 
 ### A note on performing sequence clustering for confirmation of database non-redundancy
 
@@ -113,15 +103,11 @@ ATGACGCCAACCATTGAACTTATTTGTGGCCATCGCTCCATTCGCCATTTCACTGATGAACCCATTTCCG...
 
 Since `cd-hit-est` and `cd-hit` read sequence headers till the first space when parameter `-d` equals zero, only isolate names will appear in the cluster file, thus solving the problem of sequence clustering.
 
-
-
 ## 2. Filename convention
 
 The name of every FASTA file (`.fna` for nucleotide sequences and `.faa` for protein sequences) of this database consists of two fields: gene or cluster name, and an indicator for nitrofurantoin susceptible ('S') or resistant ('R') alleles. Double underscores separate these two fields. For example, `nfsA__R.fna` stores alleles of the gene _nfsA_ in nitrofurantoin resistant _E. coli_ (NITREc).
 
 Gene or cluster names are kept in sequence headers for convenience of concatenating sequence files for some software or analyses, despite presence of these names in the names of FASTA files.
-
-
 
 ## 3. Content of nucleotide and protein sequences
 
