@@ -1,11 +1,8 @@
 # A Database of Chromosomal Genetic Alterations Related to Nitrofurantoin Resistance in _Escherichia coli_
-
+[![DOI](https://zenodo.org/badge/265615310.svg)](https://zenodo.org/badge/latestdoi/265615310)
 Yu Wan
 
 Creation: 20 May 2020; latest update: 11 March 2022.
-
-[![DOI](https://zenodo.org/badge/265615310.svg)](https://zenodo.org/badge/latestdoi/265615310)
-
 <br/>
 
 This database consists of nucleotide and amino acid sequences of chromosomal genes involving in nitrofurantoin resistance in *E. coli*.
