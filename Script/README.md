@@ -102,14 +102,12 @@ CONDA_ACTIVATE_METHOD='source'  # Or 'conda', depending on whether 'source activ
 BLASTN_DIR=""  # The directory where program blastn is stored (not needed if both MODULE and CONDA_ENV are specified)
 
 # Input data (mandatory)
-GENOMES="$HOME/work/subjects_genomes.txt"  # Path to a newline-delimited text file of sample-genome names (basename of filenames of FASTA files). Every line must be followed by a Linux newline character '\n', including the last line.
+GENOMES="$HOME/work/subjects_genomes.tsv" # Path to a tab-delimited text file of subject genome names and full paths of their FASTA files ("[genome]\t[file path and name]\n"). Every line must end with a Linux newline character '\n', including the last line.
 DB_DIR="blast_db"  # Directory for output BLAST databases (can be deleted by users afterwards)
-SUBJECT_DIR="$HOME/work/assemblies"  # Directory of input subject sequences (Genome assemblies in FASTA format)
-SUBJECT_SUFFIX='fna'  # Filename extension for subject sequences. Alternative values can be 'fasta', 'fa', etc.
 QUERIES="$HOME/work/queries.fna"  # Path to the FASTA file of query sequences.
-OUT_DIR="results"  # Output directory
+OUT_DIR="hits"  # Output directory
 
-# BLAST arguments
+# BLAST arguments (optional)
 TASK='megablast'  # Or 'blastn' for short query DNA sequences
 MIN_IDENTITY='70'  # Minimum nucleotide identity required for every hit
 MAX_TARGET_SEQS='10'  # Maximum number of hits returned per query sequence
@@ -154,13 +152,13 @@ Python script `compileBLAST.py` has been developed to compile output tab-delimit
 
 ```bash
 cd ~/work
-python compileBLAST.py --input results/*__megablast.tsv --delimiter '__' --genes 'gene1,gene2,gene3' --output demo --codon_table 11 --add_sample_name > compile_blast.log
+python compileBLAST.py --input results/*__megablast.tsv --delimiter '__' --genes 'gene1,gene2,gene3' --output demo/compiled_hits --add_sample_name > compile_blast.log
 ```
 
 Alternatively, a plain-text file of a list of gene names (one gene per line) can be given to the `--genes` argument using the syntax `--genes File:$file_path`. For example:
 
 ```bash
-python compileBLAST.py --input results/*__megablast.tsv --delimiter '__' --genes 'File:gene_names.txt' --output demo --codon_table 11 --add_sample_name > compile_blast.log
+python compileBLAST.py --input hits/*__megablast.tsv --delimiter '__' --genes 'File:gene_names.txt' --output demo/compiled_hits --add_sample_name > compile_blast.log
 ```
 
 The gene-name list can be created from the query FASTA file using the command that follows:
