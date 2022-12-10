@@ -27,12 +27,12 @@ Note:
 
 Example commands:
     python compileBLAST.py --input *__megablast.tsv --delimiter '__' --genes 'File:$HOME/work/gene_list.txt' --output study1 --add_sample_name > compile_blast.log
-    python compileBLAST.py --input *__megablast.tsv --delimiter '__' --genes 'gene1,gene2,gene3' --output study1 --translate --codon_table 11 --add_sample_name > compile_blast.log
+    python compileBLAST.py --input *__megablast.tsv --delimiter '__' --genes 'gene1,gene2,gene3' --output study1/compiled_hits --translate --codon_table 11 --add_sample_name > compile_blast.log
 Dependencies: Python 3, BioPython
 
 Copyright (C) 2020-2021 Yu Wan <wanyuac@126.com>
 Licensed under the GNU General Public Licence version 3 (GPLv3) <https://www.gnu.org/licenses/>.
-Publication: 11 June 2020; the latest update: 31 May 2022.
+Publication: 11 June 2020; the latest update: 10 December 2022.
 """
 
 import os
