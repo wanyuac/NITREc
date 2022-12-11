@@ -14,7 +14,7 @@
 #
 # Copyright (C) 2020-2022 Yu Wan <wanyuac@126.com>
 # Licensed under the GNU General Public Licence version 3 (GPLv3) <https://www.gnu.org/licenses/>.
-# Creation: 28 August 2020; the latest modification: 10 December 2022
+# Creation: 28 August 2020; the latest modification: 11 December 2022
 
 ##### Jump to the current working directory to enable use of relative paths (for example, to access the configuration file)
 # The job will be run under the directory where it is submitted.
@@ -87,12 +87,15 @@ echo "  Maximum e-value: ${MAX_EVALUE}"
 
 while read -r line
 do
-    IFS=$'\t' read -r -a fields <<< "$line"
-    genome="${fields[0]}"
-    fasta="${fields[1]}"
-    if [ ! -z "$genome" ] && [ ! -f ${DB_DIR}/${genome}.nsq ]
+    if [ ! -z "$line" ]  # Occasionally, blank lines were included in the input TSV file by mistake.
     then
-        makeblastdb -in $fasta -out ${DB_DIR}/$genome -dbtype nucl
+        IFS=$'\t' read -r -a fields <<< "$line"
+        genome="${fields[0]}"
+        fasta="${fields[1]}"
+        if [ ! -z "$genome" ] && [ ! -f ${DB_DIR}/${genome}.nsq ]
+        then
+            makeblastdb -in $fasta -out ${DB_DIR}/$genome -dbtype nucl
+        fi
+        blastn -query $QUERIES -db ${DB_DIR}/$genome -out ${OUT_DIR}/${genome}__${TASK}.tsv -task $TASK -evalue $MAX_EVALUE -perc_identity $MIN_IDENTITY -max_target_seqs $MAX_TARGET_SEQS -outfmt '6 qseqid sseqid slen pident qcovhsp length mismatch gapopen qstart qend sstart send sstrand evalue bitscore sseq'
     fi
-    blastn -query $QUERIES -db ${DB_DIR}/$genome -out ${OUT_DIR}/${genome}__${TASK}.tsv -task $TASK -evalue $MAX_EVALUE -perc_identity $MIN_IDENTITY -max_target_seqs $MAX_TARGET_SEQS -outfmt '6 qseqid sseqid slen pident qcovhsp length mismatch gapopen qstart qend sstart send sstrand evalue bitscore sseq'
 done < $GENOMES
